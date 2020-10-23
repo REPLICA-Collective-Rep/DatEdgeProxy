@@ -7,7 +7,7 @@
 
 struct SimulateSettings {
     const std::string xsub_addr = "tcp://127.0.0.1:5556";
-    int interval = 1000;
+    int interval = 20;
     vector<int> sensors {
         1,2,3,4,5,6,7
     };

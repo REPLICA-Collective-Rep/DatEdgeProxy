@@ -21,14 +21,35 @@ void Simulate::threadedFunction(){
         return;
     }
 
+    int counter = 0;
     while( isThreadRunning() ){
 
         for (size_t i = 0; i < settings.sensors.size(); i++ ) {
-            zmq::message_t msg("hello world!", 12);
+
+
+            std::ostringstream _msg;
+            _msg << "sensors" << " ";      
+            _msg << "p" << i << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            _msg << counter;
+            _msg <<  ";\n";
+
+            std::string str_msg = _msg.str();
+
+            zmq::message_t msg(str_msg.c_str(), str_msg.size());
             auto res = pub->send(msg, zmq::send_flags::none);
             
         }
         ofLogNotice("Simulate::threadedFunction") << "Sending... ";
         sleep(settings.interval);
+
+        counter += settings.interval;
     }
 }

@@ -39,12 +39,18 @@ void Writer::threadedFunction(){
         ofLogVerbose("Writer::threadedFunction") << "Got " << nin << " events";
         
         for (int ind=0; ind<nin; ++ind) {
-            zmq::message_t msg;
+            ofBuffer data;
+            data.clear();
 
-            auto socket = events[ind].socket;
-            auto res = sub->recv(msg, zmq::recv_flags::none);
-
-            ofLogNotice("Writer::threadedFunction") << "Hey!";
+            zmq::message_t m;
+            sub->recv(&m);            
+            
+            const int numBytes = m.size();
+            const char *src = (const char*)m.data();
+            
+            data.set(src, numBytes);
+        
+            ofLogNotice("Writer::threadedFunction") << data;
         }
     }
 
