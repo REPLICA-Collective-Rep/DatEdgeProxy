@@ -9,11 +9,11 @@ void ofApp::setup(){
     //ofSetLogLevel(OF_LOG_VERBOSE);
 
     simulate.setup(ctx);
-    simulate.startThread();
+    //simulate.startThread();
 
     writer.setup(ctx);
     writer.startThread();
-    
+
     proxy.setup(ctx);
     proxy.startThread();
 
@@ -32,6 +32,24 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    switch(key){
+    case 's':
+        if(!simulate.isThreadRunning()){
+            simulate.startThread();
+        } else {
+            simulate.stopThread();
+        }
+        break;
+    case 'w':
+        if(!writer.isThreadRunning()){
+            writer.startThread();
+        } else {
+            writer.stopThread();
+        }
+      break;
+    default:
+        break;
+    }
 
 }
 
