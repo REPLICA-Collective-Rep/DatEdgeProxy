@@ -14,6 +14,9 @@ void ofApp::setup(){
     writer.setup(ctx);
     writer.startThread();
 
+    visualiser.setup(ctx);
+    visualiser.startThread();
+
     proxy.setup(ctx);
     proxy.startThread();
 
@@ -26,8 +29,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-
+    visualiser.draw(graphFbo);
 }
 
 //--------------------------------------------------------------

@@ -5,6 +5,8 @@
 #include "proxy.h"
 #include "simulate.h"
 #include "writer.h"
+#include "visualiser.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -31,5 +33,8 @@ class ofApp : public ofBaseApp{
 		Proxy proxy;
 		Simulate simulate;
 		Writer writer;
+		Visualiser visualiser;
+
+		ofFbo graphFbo;
 	
 };
