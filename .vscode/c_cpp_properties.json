@@ -48,9 +48,9 @@
                 "/usr/include/glib-2.0",
                 "${workspaceRoot}",
                 "${workspaceRoot}/src",
-                "${workspaceRoot}/../../../addons/ofxOsc/src",
-                "${workspaceRoot}/../../../addons/ofxImGui/src",
-                "${workspaceRoot}/../../../addons/ofxImGui/libs/imgui/src"
+                "${workspaceRoot}/../../../addons/ofxZmq/src",
+                "${workspaceRoot}/../../../addons/ofxZmq/libs/zmq"
+
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
@@ -63,7 +63,7 @@
                     "${workspaceRoot}/../../../libs/openFrameworks"
                 ]
             },
-            "intelliSenseMode": "clang-x64",
+            "intelliSenseMode": "gcc-x86",
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++17"
