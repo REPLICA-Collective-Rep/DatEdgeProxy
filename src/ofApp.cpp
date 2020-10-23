@@ -18,7 +18,7 @@ void ofApp::setup(){
     visualiser.startThread();
 
     proxy.setup(ctx);
-    proxy.startThread();
+    //proxy.startThread();
 
 }
 
@@ -30,6 +30,15 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     visualiser.draw(graphFbo);
+
+
+
+    std::ostringstream log;
+    log << "simulate (s): " << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
+    log << "writer (w): "   << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
+    log << "proxy (p): "    << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
+    log << "visualiser: "   << (visualiser.isThreadRunning() ? "ON" : "OFF") ;
+    ofDrawBitmapStringHighlight( log.str(), glm::vec2(50, 50));
 }
 
 //--------------------------------------------------------------
@@ -47,6 +56,14 @@ void ofApp::keyPressed(int key){
             writer.startThread();
         } else {
             writer.stopThread();
+        }
+      break;
+        break;
+    case 'p':
+        if(!proxy.isThreadRunning()){
+            proxy.startThread();
+        } else {
+            proxy.stopThread();
         }
       break;
     default:
