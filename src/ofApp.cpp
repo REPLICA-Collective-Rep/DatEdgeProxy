@@ -18,7 +18,7 @@ void ofApp::setup(){
     visualiser.startThread();
 
     proxy.setup(ctx);
-    //proxy.startThread();
+    proxy.startThread();
 
 }
 
