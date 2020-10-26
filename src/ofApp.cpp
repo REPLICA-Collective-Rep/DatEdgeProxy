@@ -5,20 +5,26 @@ zmq::context_t ctx;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
     //ofSetLogLevel(OF_LOG_VERBOSE);
 
-    simulate.setup(ctx);
-    //simulate.startThread();
+    SimulateSettings   simulateSettings("127.0.0.1");
+    WriterSettings     writerSettings("127.0.0.1");
+    VisualiserSettings visualiserSettings("127.0.0.1");
+    ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
 
-    writer.setup(ctx);
+
+
+    writer.setup(ctx, writerSettings);
     writer.startThread();
 
-    visualiser.setup(ctx);
+    visualiser.setup(ctx, visualiserSettings);
     visualiser.startThread();
 
-    proxy.setup(ctx);
+    proxy.setup(ctx, proxySettings);
     proxy.startThread();
+
+    simulate.setup(ctx, simulateSettings);
+    simulate.startThread();
 
 }
 
@@ -31,14 +37,13 @@ void ofApp::update(){
 void ofApp::draw(){
     visualiser.draw(graphFbo);
 
-
-
     std::ostringstream log;
     log << "simulate (s): " << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
     log << "writer (w): "   << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
     log << "proxy (p): "    << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
-    log << "visualiser: "   << (visualiser.isThreadRunning() ? "ON" : "OFF") ;
-    ofDrawBitmapStringHighlight( log.str(), glm::vec2(50, 50));
+    log << "visualiser: "   << (visualiser.isThreadRunning() ? "ON" : "OFF");
+
+    ofDrawBitmapStringHighlight( log.str(), 50 , 50);
 }
 
 //--------------------------------------------------------------
@@ -65,6 +70,10 @@ void ofApp::keyPressed(int key){
         } else {
             proxy.stopThread();
         }
+      break;
+    case OF_KEY_UP:
+    case OF_KEY_RIGHT:
+        visualiser.incrementSelected();
       break;
     default:
         break;

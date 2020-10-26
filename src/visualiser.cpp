@@ -1,5 +1,5 @@
 #include "visualiser.h"
-#include "config.h"
+#include "parser.h"
 #include <regex>
 
 
@@ -33,34 +33,45 @@ std::array<ofColor, DATE_NUM_CHANNELS> colors {
 
 
 Visualiser::Visualiser(){
-    
+    selected_reading = all_readings.begin();
 }
 
 
-void Visualiser::setup(zmq::context_t & ctx){
+void Visualiser::setup(zmq::context_t & ctx, VisualiserSettings settings){
+    if(isThreadRunning()){
+        ofLogWarning("Visualiser::setup") << "Thread running!";
+        return;
+    }
+    this->settings = settings;
+    isSetup = false;  
+    try{
+        std::ostringstream pub_addr; pub_addr << "tcp://" << settings.xpub_ip << ":" << ofToString(settings.xpub_port);
+        sub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
+        sub->connect(pub_addr.str());
+        sub->set(zmq::sockopt::subscribe, "");
 
-    sub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
-    sub->connect(settings.xpub_addr);
-    sub->set(zmq::sockopt::subscribe, "");
 
+        poller.add(*sub, zmq::event_flags::pollin);
+        events = std::vector<zmq::poller_event<>>(1);
 
-    poller.add(*sub, zmq::event_flags::pollin);
-    events = std::vector<zmq::poller_event<>>(1);
-
-    isSetup = true;   
+        isSetup = true;   
+    }
+    catch( const zmq::error_t& e ) {
+        ofLogWarning("Simulate::setup") << e.what();
+    }
 }
 
 void Visualiser::draw(ofFbo & fbo ){
-    lock();
     float width  = ofGetWidth();
     float height = ofGetHeight();
 
+    lock();
+    
+    if(selected_reading != all_readings.end()) {
+        int suit = selected_reading->first;
+        int numReadings = selected_reading->second.size();
 
-    for (auto it = all_readings.begin(); it != all_readings.end(); ++it) {
-        int suit = it->first;
-        int numReadings = it->second.size();
-
-        auto reading_it0 = it->second.begin() + 1;
+        auto reading_it0 = selected_reading->second.begin() + 1;
 
         float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
         float hInc    = height / DATE_NUM_CHANNELS;
@@ -69,7 +80,7 @@ void Visualiser::draw(ofFbo & fbo ){
         float wScale  = width / ((float)BUFFER_SIZE ) ;
 
         float t = 0.0;
-        for (auto reading_it1 = reading_it0; reading_it1 != it->second.end(); ++reading_it1) { 
+        for (auto reading_it1 = reading_it0; reading_it1 != selected_reading->second.end(); ++reading_it1) { 
             float t0 = t * wScale;
             float t1 = (t + 1) * wScale;
             for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){
@@ -83,10 +94,20 @@ void Visualiser::draw(ofFbo & fbo ){
             reading_it0 = reading_it1;
             t += 1;
         }
-
-        break;
     }
     unlock();
+
+    std::ostringstream log;
+    log << "Suits: \n";
+    for (auto it = all_readings.begin(); it != all_readings.end(); ++it) {
+        if(it == selected_reading)
+            log << "  + Suit " << it->first << " (" << it->second.back().t << ")\n";
+        else 
+            log << "  - Suit " << it->first << " (" << it->second.back().t << ")\n";
+        
+    }
+
+    ofDrawBitmapStringHighlight( log.str(), glm::vec2(ofGetWidth() - 150 , 50));
 
 }
 
@@ -110,124 +131,35 @@ void Visualiser::threadedFunction(){
 
         ofLogVerbose("Visualiser::threadedFunction") << "Got " << nin << " events";
         
-        for (int ind=0; ind<nin; ++ind) {
-            ofBuffer data; /// Get rid of this
-            data.clear();
-
+        for (unsigned int ind=0; ind<nin; ++ind) {
             zmq::message_t m;
-            sub->recv(&m);            
+            sub->recv(m);            
             
             const int numBytes = m.size();
             const char *src = (const char*)m.data();
             
-            data.set(src, numBytes);
-        
+            std::string data(src, numBytes);
 
-            //std::regex re("^sensors p(\\d) ((?:(?:[-+]?[0-9]*\\.?[0-9]+) ){8})(\\d+);.*$");
-            std::string pttrn1 = "^sensors p(\\d) ((?:(?:[-+]?[0-9]*\\.?[0-9]+) ){8})(\\d+);(?:[\r\n]+)*$";
-            std::string pttrn2 = "([-+]?[0-9]*\\.?[0-9]+)";
-            std::regex re1(pttrn1);
-            std::regex re2(pttrn2);
-            std::smatch match;
+            int device   ;
+            int mscounter;
+            std::vector<float> raw;    
 
-            std::string text(data);
-            if (std::regex_match(text, match, re1) && match.size() > 1) {
-
-                int device    = ofToInt(match.str(1));
-                int mscounter = ofToInt( match.str(3));
-
-                std::smatch fmatch;
-                std::string fstring = match.str(2);
-
-                std::vector<float> raw;
-                raw.reserve(DATE_NUM_CHANNELS);
-
-                int i = 0;
-                while(std::regex_search(fstring, fmatch, re2)) {
-                    if(i >= DATE_NUM_CHANNELS)
-                        break;
-                    
-                    raw.push_back( ofToFloat( fmatch[1]));
-                    fstring = fmatch.suffix();
-                }     
-                
-                if(raw.size() != DATE_NUM_CHANNELS ){
-                    ofLogWarning("Visualiser::threadedFunction") << "Wrong number of channels, " << raw.size();
-                    continue;
-                }
-
+            if ( parseSensorData(data, device, mscounter, raw)) {
                 lock();
+                
                 auto & readings = all_readings[device];
                 readings.push_back( Reading(mscounter, raw ) );
                 if( readings.size() > BUFFER_SIZE ){
                     readings.pop_front();
                 }
 
+                if(all_readings.size() == 1) selected_reading = all_readings.begin();
 
                 unlock();
 
             } else {
-                ofLogWarning("Visualiser::threadedFunction") << "Could not parse: '" << text << "'";
+                ofLogWarning("Visualiser::threadedFunction") << "Could not parse: '" << data << "'";
             }
-
         }
     }
-
 }
-    
-    // while(receiver.hasWaitingMessages()){
-
-	// 	// get the next message
-	// 	ofxOscMessage msg;
-	// 	receiver.getNextMessage(msg);
-
-
-	// 	std::regex  re("/p(\\d)/sensor");
-    //     std::smatch m;
-    //     std::string address = msg.getAddress();
-    //     if( std::regex_match(address, m, re) ){
-            
-
-    //         for( int suit : suits){
-    //             int _suit = ofToInt(m[1]);
-
-    //             if( suit == _suit){
-
-
-
-    //                 Reading reading;
-    //                 reading.data = array<float, NUM_CHANNELS>{
-    //                     msg.getArgAsFloat(0),
-    //                     msg.getArgAsFloat(1),
-    //                     msg.getArgAsFloat(2),
-    //                     msg.getArgAsFloat(3),
-    //                     msg.getArgAsFloat(4),
-    //                     msg.getArgAsFloat(5),
-    //                     msg.getArgAsFloat(6),
-    //                     msg.getArgAsFloat(7)
-    //                 };
-    //                 reading.time  = msg.getArgAsFloat(8);
-    //                 reading.rtime = ofGetSystemTimeMillis();
-
-    //                 if( srt_times.find(suit) == srt_times.end())
-    //                     srt_times[suit] = reading.time;
-
-    //                 if( srt_rtimes.find(suit) == srt_rtimes.end())
-    //                     srt_rtimes[suit] = reading.rtime;
-
-    //                 reading.time  -= srt_times[suit];
-    //                 reading.rtime -= srt_rtimes[suit];
-
-    //                 data[suit].push_back(reading);
-
-    //                 if(data[suit].size() >= BUFF_SIZE){
-    //                     data[suit].pop_front();
-    //                 }
-
-
-
-
-    //             }
-    //         }
-    //     };		
-    // }

@@ -4,13 +4,19 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
-#include "config.h"
+#include "constants.h"
 
 
 struct VisualiserSettings {
-    const std::string xpub_addr = "tcp://127.0.0.1:5555";
-    int timeout= 100;
+    std::string  xpub_ip = "127.0.0.1";
+    unsigned int xpub_port = 5555;
 
+    int timeout = 100;
+
+	VisualiserSettings(){}
+	VisualiserSettings(std::string xpub_ip):
+        xpub_ip(xpub_ip)
+    {}
 };
 
 
@@ -20,11 +26,16 @@ public:
 
     Visualiser();
 
-    void setup(zmq::context_t & ctx);
+    void setup(zmq::context_t & ctx, VisualiserSettings settings);
 
 	void draw(ofFbo & fbo );
 
     void threadedFunction();
+
+	void incrementSelected(){
+		selected_reading++;
+		if(selected_reading == all_readings.end()) selected_reading = all_readings.begin();
+	}
 
 private:
 
@@ -50,6 +61,7 @@ private:
     zmq::poller_t<> poller;
 
 	std::map<int, std::deque<Reading>> all_readings;
+	std::map<int, std::deque<Reading>>::const_iterator selected_reading;
 };
 
 

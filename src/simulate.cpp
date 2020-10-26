@@ -6,12 +6,25 @@ Simulate::Simulate(){
 }
 
 
-void Simulate::setup(zmq::context_t & ctx){
+void Simulate::setup(zmq::context_t & ctx, SimulateSettings settings){
+    if(isThreadRunning()){
+        ofLogWarning("Simulate::setup") << "Thread running!";
+        return;
+    }
 
-    pub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);
-    pub->connect(settings.xsub_addr);
+    this->settings = settings;
+    isSetup = false;  
+    try{
+        std::ostringstream xsub_addr; xsub_addr << "tcp://" << settings.xsub_ip << ":" << ofToString(settings.xsub_port);
+        ofLogNotice("Simulate::setup:xsub_addr") << xsub_addr.str();
+        pub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);
+        pub->connect(xsub_addr.str());
 
-    isSetup = true;   
+        isSetup = true;   
+    }
+    catch( const zmq::error_t& e ) {
+        ofLogError("Simulate::setup") <<  e.what();
+    }
 }
 
 void Simulate::threadedFunction(){

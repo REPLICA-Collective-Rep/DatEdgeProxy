@@ -6,10 +6,17 @@
 
 
 struct WriterSettings {
-    const std::string xpub_addr = "tcp://127.0.0.1:5555";
-    int timeout= 100;
+    std::string  xpub_ip   = "127.0.0.1";
+    unsigned int xpub_port = 5555;
 
+    int timeout = 100;
+
+	WriterSettings(){}
+	WriterSettings(std::string xpub_ip):
+        xpub_ip(xpub_ip)
+    {}
 };
+
 
 class Writer : public ofThread {
 
@@ -17,7 +24,7 @@ public:
 
     Writer();
 
-    void setup(zmq::context_t & ctx);
+    void setup(zmq::context_t & ctx, WriterSettings settings);
 
     void threadedFunction();
 

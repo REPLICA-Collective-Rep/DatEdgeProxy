@@ -6,17 +6,28 @@ Writer::Writer(){
 }
 
 
-void Writer::setup(zmq::context_t & ctx){
+void Writer::setup(zmq::context_t & ctx, WriterSettings settings){
+    if(isThreadRunning()){
+        ofLogWarning("Writer::setup") << "Thread running!";
+        return;
+    }
 
-    sub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
-    sub->connect(settings.xpub_addr);
-    sub->set(zmq::sockopt::subscribe, "");
+    this->settings = settings;
+    isSetup = false;  
+    try{
+        std::ostringstream xpub_addr; xpub_addr << "tcp://" << settings.xpub_ip << ":" << ofToString(settings.xpub_port);
+        sub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
+        sub->connect(xpub_addr.str());
+        sub->set(zmq::sockopt::subscribe, "");
 
+        poller.add(*sub, zmq::event_flags::pollin);
+        events = std::vector<zmq::poller_event<>>(1);
 
-    poller.add(*sub, zmq::event_flags::pollin);
-    events = std::vector<zmq::poller_event<>>(1);
-
-    isSetup = true;   
+        isSetup = true;   
+    }
+    catch( const zmq::error_t& e ) {
+        ofLogWarning("Writer::setup") << e.what();
+    }
 }
 
 void Writer::threadedFunction(){

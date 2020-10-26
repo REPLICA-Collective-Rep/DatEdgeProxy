@@ -4,14 +4,19 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
-
 struct SimulateSettings {
-    //const std::string xsub_addr = "tcp://127.0.0.1:5556";
-    const std::string xsub_addr = "tcp://inanna.local:5556";
-    int interval = 200;
+    std::string xsub_ip    = "127.0.0.1";    
+    unsigned int xsub_port = 5556;
+
+    unsigned int interval   = 200;
     vector<int> sensors {
         1,2,3,4,5,6,7
     };
+
+    SimulateSettings(){}
+    SimulateSettings(std::string xsub_ip):
+        xsub_ip(xsub_ip)
+    {}
 };
 
 class Simulate : public ofThread {
@@ -20,7 +25,7 @@ public:
 
     Simulate();
 
-    void setup(zmq::context_t & ctx);
+    void setup(zmq::context_t & ctx, SimulateSettings settings);
 
     void threadedFunction();
 

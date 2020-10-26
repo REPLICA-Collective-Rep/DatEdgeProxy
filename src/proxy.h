@@ -6,9 +6,19 @@
 
 
 struct ProxySettings {
-    const std::string xpub_addr = "tcp://0.0.0.0:5555";
-    const std::string xsub_addr = "tcp://0.0.0.0:5556";
-    int timeout = 100;
+    std::string  xpub_ip   = "0.0.0.0";
+    unsigned int xpub_port = 5555;
+
+    std::string xsub_ip    = "0.0.0.0";
+    unsigned int xsub_port = 5556;
+
+    unsigned int timeout   = 100;
+
+    ProxySettings(){}
+    ProxySettings(std::string xpub_ip, std::string xsub_ip):
+        xpub_ip(xpub_ip),
+        xsub_ip(xsub_ip) 
+    {}
 };
 
 class Proxy : public ofThread {
@@ -17,7 +27,7 @@ public:
 
     Proxy();
 
-    void setup(zmq::context_t & ctx);
+    void setup(zmq::context_t & ctx, ProxySettings settings);
 
     void threadedFunction();
 
