@@ -1,8 +1,22 @@
 #include "writer.h"
+#include "parser.h"
+#include "cnpy.h"
 
+#include "constants.h"
 
 Writer::Writer(){
-    
+
+}
+
+Writer::~Writer(){
+    if(current_dir.exists() && ofDirectory::isDirectoryEmpty(current_dir.path())){
+        current_dir.remove(true);
+    }
+
+    for( auto & buffer : buffers){
+        cnpy::npy_save(buffer.second.path,&(buffer.second.data)[0],{ settings.buffer_size, DATE_NUM_CHANNELS + 1}, "a");
+    }
+    buffers.clear();
 }
 
 
@@ -28,10 +42,17 @@ void Writer::setup(zmq::context_t & ctx, WriterSettings settings){
     catch( const zmq::error_t& e ) {
         ofLogWarning("Writer::setup") << e.what();
     }
+
+    session = ofGetTimestampString();
+    current_dir = ofDirectory(ofToDataPath(session));
+    if(!current_dir.exists()){
+        current_dir.create();
+    }
+    
 }
 
 void Writer::threadedFunction(){
-
+    
     if( !isSetup ){
         ofLogError("Writer::threadedFunction") << "Not setup!!";
         return;
@@ -49,20 +70,56 @@ void Writer::threadedFunction(){
 
         ofLogVerbose("Writer::threadedFunction") << "Got " << nin << " events";
         
-        for (int ind=0; ind<nin; ++ind) {
-            ofBuffer data;
-            data.clear();
-
+        for (unsigned int ind=0; ind<nin; ++ind) {
             zmq::message_t m;
-            sub->recv(&m);            
+            sub->recv(m);            
             
             const int numBytes = m.size();
             const char *src = (const char*)m.data();
             
-            data.set(src, numBytes);
+            std::string data(src, numBytes);
+
+            int device   ;
+            int mscounter;
+            std::vector<float> raw;    
+
+            if ( parseSensorData(data, device, mscounter, raw)) {
+                
+                auto buffer = buffers.find(device);
+                if(  buffer == buffers.end()){ 
+                    std::string path = ofToString(device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npz";
+
+                    buffers[device] = bufferInfo( ofFilePath::join( current_dir, path));
+                            
+                    buffer = buffers.find(device);
+                }
+
+                std::array<float,DATE_NUM_CHANNELS + 1 > row;
+
+                row[0] = mscounter;
+                for(int i = 1; i < DATE_NUM_CHANNELS + 1; i++ ){
+                    row[i] = data[i - 1];
+                }
+
+                buffer->second.data.push_back( std::move(row));
+
+                if(buffer->second.data.size() == settings.buffer_size ){
+                    cnpy::npy_save(buffer->second.path,&(buffer->second.data)[0],{ settings.buffer_size, DATE_NUM_CHANNELS + 1}, "a");
+                    buffer->second.data.clear();
+                }
+
         
-            ofLogNotice("Writer::threadedFunction") << data;
+                
+            } else {
+                ofLogWarning("Writer::threadedFunction") << "Could not parse: '" << data << "'";
+            }
         }
     }
 
+    for( auto & buffer : buffers){
+        cnpy::npy_save(buffer.second.path,&(buffer.second.data)[0],{ settings.buffer_size, DATE_NUM_CHANNELS + 1}, "a");
+    }
+    buffers.clear();
+
+    subsession += 1;
 }

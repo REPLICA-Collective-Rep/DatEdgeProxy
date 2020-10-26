@@ -8,7 +8,7 @@ struct SimulateSettings {
     std::string xsub_ip    = "127.0.0.1";    
     unsigned int xsub_port = 5556;
 
-    unsigned int interval   = 200;
+    unsigned int interval   = 20;
     vector<int> sensors {
         1,2,3,4,5,6,7
     };

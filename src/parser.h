@@ -1,11 +1,12 @@
 #pragma once
 #include "ofMain.h"
 #include "constants.h"
+
 #include <regex>
 
 
 
-bool parseSensorData(const std::string & data, int& device, int&mscounter, std::vector<float> & raw ){
+static bool parseSensorData(const std::string & data, int& device, int&mscounter, std::vector<float> & raw ){
     const std::string pttrn1 = "^sensors p(\\d) ((?:(?:[-+]?[0-9]*\\.?[0-9]+) ){8})(\\d+);(?:[\r\n]+)*$";
     const std::string pttrn2 = "([-+]?[0-9]*\\.?[0-9]+)";
     const std::regex re1(pttrn1);

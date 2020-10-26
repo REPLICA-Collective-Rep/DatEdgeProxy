@@ -60,7 +60,6 @@ void Simulate::threadedFunction(){
             auto res = pub->send(msg, zmq::send_flags::none);
             
         }
-        ofLogNotice("Simulate::threadedFunction") << "Sending... ";
         sleep(settings.interval);
 
         counter += settings.interval;
