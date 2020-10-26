@@ -40,10 +40,10 @@ void ofApp::draw(){
     std::ostringstream log;
     log << "Framerate: "    << ofGetFrameRate() << "\n";
     log << "\n";
-    log << "simulate (s): " << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
-    log << "writer (w): "   << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
-    log << "proxy (p): "    << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
-    log << "visualiser (v): "   << (visualiser.isThreadRunning() ? "ON" : "OFF");
+    log << "simulate   (s): "  << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
+    log << "writer     (w): "  << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
+    log << "proxy      (p): "  << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
+    log << "visualiser (v): "  << (visualiser.isThreadRunning() ? "ON" : "OFF");
 
     ofDrawBitmapStringHighlight( log.str(), 50 , 50);
 }

@@ -11,7 +11,7 @@ struct VisualiserSettings {
     std::string  xpub_ip = "127.0.0.1";
     unsigned int xpub_port = 5555;
 
-    int timeout = 100;
+    int timeout = 10;
 
 	VisualiserSettings(){}
 	VisualiserSettings(std::string xpub_ip):
