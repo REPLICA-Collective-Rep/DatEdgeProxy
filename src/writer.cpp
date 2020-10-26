@@ -14,7 +14,7 @@ Writer::~Writer(){
     }
 
     for( auto & buffer : buffers){
-        cnpy::npy_save(buffer.second.path,&(buffer.second.data)[0],{ settings.buffer_size, DATE_NUM_CHANNELS + 1}, "a");
+        cnpy::npy_save(buffer.second.path,&((buffer.second.data)[0]),{ buffer.second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
     }
     buffers.clear();
 }
@@ -87,29 +87,24 @@ void Writer::threadedFunction(){
                 
                 auto buffer = buffers.find(device);
                 if(  buffer == buffers.end()){ 
-                    std::string path = ofToString(device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npz";
+                    std::string path = ofToString(device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npy";
 
                     buffers[device] = bufferInfo( ofFilePath::join( current_dir, path));
                             
                     buffer = buffers.find(device);
                 }
 
-                std::array<float,DATE_NUM_CHANNELS + 1 > row;
-
-                row[0] = mscounter;
+                buffer->second.data.push_back( mscounter );
                 for(int i = 1; i < DATE_NUM_CHANNELS + 1; i++ ){
-                    row[i] = data[i - 1];
+                     buffer->second.data.push_back( data[i - 1]);
                 }
 
-                buffer->second.data.push_back( std::move(row));
+                if(buffer->second.data.size() >= settings.buffer_size ){
 
-                if(buffer->second.data.size() == settings.buffer_size ){
-                    cnpy::npy_save(buffer->second.path,&(buffer->second.data)[0],{ settings.buffer_size, DATE_NUM_CHANNELS + 1}, "a");
+                    cnpy::npy_save(buffer->second.path, &((buffer->second.data)[0]), { buffer->second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
                     buffer->second.data.clear();
                 }
 
-        
-                
             } else {
                 ofLogWarning("Writer::threadedFunction") << "Could not parse: '" << data << "'";
             }
@@ -117,7 +112,7 @@ void Writer::threadedFunction(){
     }
 
     for( auto & buffer : buffers){
-        cnpy::npy_save(buffer.second.path,&(buffer.second.data)[0],{ settings.buffer_size, DATE_NUM_CHANNELS + 1}, "a");
+        cnpy::npy_save(buffer.second.path,&((buffer.second.data)[0]),{ buffer.second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
     }
     buffers.clear();
 

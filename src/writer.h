@@ -12,7 +12,7 @@ struct WriterSettings {
 
 
     int timeout    = 100;
-    unsigned int buffer_size = 100;
+    unsigned int buffer_size = 512;
 
 	WriterSettings(){}
 	WriterSettings(std::string xpub_ip):
@@ -36,7 +36,7 @@ private:
 
     struct bufferInfo {
         std::string path;
-        std::vector<std::array<float, DATE_NUM_CHANNELS + 1 >> data;
+        std::vector<float> data;
         
         bufferInfo(std::string path): path(path){}
         bufferInfo() {}
