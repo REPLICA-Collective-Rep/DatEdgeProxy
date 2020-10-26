@@ -65,8 +65,7 @@ void Visualiser::draw(ofFbo & fbo ){
     float width  = ofGetWidth();
     float height = ofGetHeight();
 
-    lock();
-    
+
     if(selected_reading != all_readings.end()) {
         int suit = selected_reading->first;
         int numReadings = selected_reading->second.size();
@@ -74,43 +73,30 @@ void Visualiser::draw(ofFbo & fbo ){
     
         float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
         float hOff    = 2.0;
-        float wScale  = width / ((float)settings.buffer_size ) ;
+
+        float interval = ((display_lines[0].end() - 1)->x - display_lines[0].begin()->x) / display_lines[0].size();
+        float wOff     = display_lines[0].begin()->x;
+        float wScale   = width / ((float)settings.buffer_size * interval) ;
 
         ofPushMatrix();
         ofScale( glm::vec3(wScale, hScale, 0.0));
-        ofTranslate( glm::vec3(0, 1.0, 0.0));
-
+        ofTranslate( glm::vec3(-wOff, 1.0, 0.0));
 
         for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){                
             ofSetColor(colors[i]);
-
-            auto reading_it0 = selected_reading->second.begin() + 1;
-
-            float t = 0.0;
-            for (auto reading_it1 = reading_it0; reading_it1 != selected_reading->second.end(); ++reading_it1) { 
-                float t0 = t ;
-                float t1 = (t + 1);
-                float x0 = reading_it0->x[i];
-                float x1 = reading_it1->x[i]; 
-                
-                ofDrawLine( t0, x0, t1, x1);
-
-                reading_it0 = reading_it1;               
-                t += 1;
-            }
+            display_lines[i].draw();
             ofTranslate( glm::vec3(0, hOff , 0.0));
         }
         ofPopMatrix();
     }
-    unlock();
 
     std::ostringstream log;
     log << "Suits: \n";
     for (auto it = all_readings.begin(); it != all_readings.end(); ++it) {
         if(it == selected_reading)
-            log << "  + Suit " << it->first << " (" << it->second.back().t << ")\n";
+            log << "  + Suit " << it->first << " (" << it->second[0].back().x << ")\n";
         else 
-            log << "  - Suit " << it->first << " (" << it->second.back().t << ")\n";
+            log << "  - Suit " << it->first << " (" << it->second[0].back().x << ")\n";
         
     }
 
@@ -152,15 +138,29 @@ void Visualiser::threadedFunction(){
             std::vector<float> raw;    
 
             if ( parseSensorData(data, device, mscounter, raw)) {
-                lock();
-                
+
                 auto & readings = all_readings[device];
-                readings.push_back( Reading(mscounter, raw ) );
-                if( readings.size() > settings.buffer_size ){
-                    readings.pop_front();
+                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
+                    readings[i].push_back(glm::vec3(mscounter, raw[i], 0));
+                    if( readings[i].size() > settings.buffer_size ){
+                        readings[i].erase(readings[i].begin());
+                    }
                 }
 
+                lock();
+
                 if(all_readings.size() == 1) selected_reading = all_readings.begin();
+                if( selected_reading->first == device ){
+                    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
+                        display_lines[i].clear(); 
+
+                        glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
+                        int size = readings[i].size();
+
+                        display_lines[i].addVertices( verts, size);
+                    }
+
+                }
 
                 unlock();
 

@@ -40,20 +40,6 @@ public:
 
 private:
 
-
-	struct Reading {
-		float t;
-		std::array<float, DATE_NUM_CHANNELS> x;
-
-		Reading( int mscounter, const std::vector<float> & raw){
-			t = mscounter;
-			
-			std::copy(std::begin(raw), std::end(raw), std::begin(x));
-
-		}
-	};
-
-
     bool isSetup = false;    
     VisualiserSettings settings;
     shared_ptr<zmq::socket_t> sub;
@@ -61,8 +47,10 @@ private:
     std::vector<zmq::poller_event<>> events;
     zmq::poller_t<> poller;
 
-	std::map<int, std::deque<Reading>> all_readings;
-	std::map<int, std::deque<Reading>>::const_iterator selected_reading;
+	std::array<ofPolyline, DATE_NUM_CHANNELS> display_lines;
+
+	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>> all_readings;
+	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>>::const_iterator selected_reading;
 };
 
 
