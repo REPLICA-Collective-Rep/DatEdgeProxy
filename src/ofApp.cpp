@@ -38,10 +38,12 @@ void ofApp::draw(){
     visualiser.draw(graphFbo);
 
     std::ostringstream log;
+    log << "Framerate: "    << ofGetFrameRate() << "\n";
+    log << "\n";
     log << "simulate (s): " << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
     log << "writer (w): "   << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
     log << "proxy (p): "    << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
-    log << "visualiser: "   << (visualiser.isThreadRunning() ? "ON" : "OFF");
+    log << "visualiser (v): "   << (visualiser.isThreadRunning() ? "ON" : "OFF");
 
     ofDrawBitmapStringHighlight( log.str(), 50 , 50);
 }
@@ -69,6 +71,13 @@ void ofApp::keyPressed(int key){
             proxy.startThread();
         } else {
             proxy.stopThread();
+        }
+      break;
+    case 'v':
+        if(!visualiser.isThreadRunning()){
+            visualiser.startThread();
+        } else {
+            visualiser.stopThread();
         }
       break;
     case OF_KEY_UP:
