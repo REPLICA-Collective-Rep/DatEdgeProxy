@@ -12,6 +12,7 @@ struct VisualiserSettings {
     unsigned int xpub_port = 5555;
 
     int timeout = 10;
+	unsigned int buffer_size = 512;
 
 	VisualiserSettings(){}
 	VisualiserSettings(std::string xpub_ip):

@@ -1,2 +1,1 @@
 #define DATE_NUM_CHANNELS 8
-#define BUFFER_SIZE 512

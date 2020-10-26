@@ -77,7 +77,7 @@ void Visualiser::draw(ofFbo & fbo ){
         float hInc    = height / DATE_NUM_CHANNELS;
         float hOff    = hInc * 0.5;
 
-        float wScale  = width / ((float)BUFFER_SIZE ) ;
+        float wScale  = width / ((float)settings.buffer_size ) ;
 
         float t = 0.0;
         for (auto reading_it1 = reading_it0; reading_it1 != selected_reading->second.end(); ++reading_it1) { 
@@ -149,7 +149,7 @@ void Visualiser::threadedFunction(){
                 
                 auto & readings = all_readings[device];
                 readings.push_back( Reading(mscounter, raw ) );
-                if( readings.size() > BUFFER_SIZE ){
+                if( readings.size() > settings.buffer_size ){
                     readings.pop_front();
                 }
 
