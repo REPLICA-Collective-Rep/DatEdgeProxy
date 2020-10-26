@@ -71,29 +71,36 @@ void Visualiser::draw(ofFbo & fbo ){
         int suit = selected_reading->first;
         int numReadings = selected_reading->second.size();
 
-        auto reading_it0 = selected_reading->second.begin() + 1;
-
+    
         float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
-        float hInc    = height / DATE_NUM_CHANNELS;
-        float hOff    = hInc * 0.5;
-
+        float hOff    = 2.0;
         float wScale  = width / ((float)settings.buffer_size ) ;
 
-        float t = 0.0;
-        for (auto reading_it1 = reading_it0; reading_it1 != selected_reading->second.end(); ++reading_it1) { 
-            float t0 = t * wScale;
-            float t1 = (t + 1) * wScale;
-            for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){
-                ofSetColor(colors[i]);
-                float x0 = reading_it0->x[i] * hScale; x0 += hOff + (float)i * hInc;
-                float x1 = reading_it1->x[i] * hScale; x1 += hOff + (float)i * hInc;  
+        ofPushMatrix();
+        ofScale( glm::vec3(wScale, hScale, 0.0));
+        ofTranslate( glm::vec3(0, 1.0, 0.0));
+
+
+        for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){                
+            ofSetColor(colors[i]);
+
+            auto reading_it0 = selected_reading->second.begin() + 1;
+
+            float t = 0.0;
+            for (auto reading_it1 = reading_it0; reading_it1 != selected_reading->second.end(); ++reading_it1) { 
+                float t0 = t ;
+                float t1 = (t + 1);
+                float x0 = reading_it0->x[i];
+                float x1 = reading_it1->x[i]; 
                 
                 ofDrawLine( t0, x0, t1, x1);
 
+                reading_it0 = reading_it1;               
+                t += 1;
             }
-            reading_it0 = reading_it1;
-            t += 1;
+            ofTranslate( glm::vec3(0, hOff , 0.0));
         }
+        ofPopMatrix();
     }
     unlock();
 
