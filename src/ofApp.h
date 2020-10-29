@@ -6,6 +6,7 @@
 #include "simulate.h"
 #include "writer.h"
 #include "visualiser.h"
+#include "dataserver.h"
 
 
 class ofApp : public ofBaseApp{
@@ -32,6 +33,9 @@ class ofApp : public ofBaseApp{
 
 		Proxy proxy;
 		Simulate simulate;
+		Dataserver dataserver;
+
+
 		Writer writer;
 		Visualiser visualiser;
 
