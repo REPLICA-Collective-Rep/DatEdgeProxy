@@ -559,7 +559,23 @@ obj/linux64/Release/src/ofApp.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/writer.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dataserver.h
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dataserver.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOsc.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscArg.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscMessage.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscSender.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscException.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscBundle.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscReceiver.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/ofApp.h:
 
@@ -1712,3 +1728,35 @@ obj/linux64/Release/src/ofApp.o: \
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dataserver.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOsc.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscArg.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscMessage.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscSender.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscException.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscBundle.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscReceiver.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h:

@@ -27,19 +27,29 @@ void Dataserver::setup(zmq::context_t & ctx, DataserverSettings settings){
         sub->set(zmq::sockopt::subscribe, "");
 
         std::ostringstream pub_addr; pub_addr << "tcp://" << settings.pub_ip << ":" << ofToString(settings.pub_port);
-        pub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);
-        pub->bind(pub_addr.str());
+        pub_core = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);
+        pub_core->bind(pub_addr.str());
+
+        std::ostringstream sub_addr; sub_addr << "tcp://" << settings.sub_ip << ":" << ofToString(settings.sub_port);
+        sub_core = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
+        sub_core->connect(sub_addr.str());
+        sub_core->set(zmq::sockopt::subscribe, "");
 
 
         poller.add(*sub, zmq::event_flags::pollin);
-        poller.add(*pub, zmq::event_flags::pollin);
-        events = std::vector<zmq::poller_event<>>(2);
+        poller.add(*pub_core, zmq::event_flags::pollin);
+        poller.add(*sub_core, zmq::event_flags::pollin);
+
+        events = std::vector<zmq::poller_event<>>(3);
 
         isSetup = true;   
     }
     catch( const zmq::error_t& e ) {
         ofLogWarning("Dataserver::setup") << e.what();
     }    
+
+
+    sender.setup(settings.osc_ip, settings.osc_port);
 }
 
 void Dataserver::threadedFunction(){
@@ -67,25 +77,43 @@ void Dataserver::threadedFunction(){
             auto socket = events[ind].socket;
 
             if(socket == *sub){
-
                 sub->recv(msg);    
                 std::string str((char *)msg.data(), msg.size());  
 
                 SensorData data;
                 if ( parseSensorData(str, data)) {
                     msg = zmq::message_t( (void *)&data, sizeof(data) );
-                    pub->send(msg);
+                    pub_core->send(msg);
+
+                    ofxOscMessage m;
+                    m.setAddress("/sensor/" + ofToString(data.device));
+                    for( int i = 0; i < DATE_NUM_CHANNELS; i++){
+                        m.addFloatArg(data.raw[i]);
+                    }
+                    sender.sendMessage(m, true);
                 } else {
                     ofLogWarning("Dataserver::threadedFunction") << "Could not parse: '" << msg << "'";
                 }
             }
 
-            if(socket == *pub){
-
+            if(socket == *pub_core){
+                pub_core->recv(msg);
+                ofLogWarning("Dataserver::threadedFunction") << "Message on pub: '" << msg.to_string() << "'";
             }
 
+            if(socket == *sub_core){
+                sub_core->recv(msg);             
+                OutputData data;
+                memcpy(msg.data(), &data, sizeof(OutputData));
 
-
+                // Send OSC
+                ofxOscMessage m;
+                m.setAddress("/ml/" + ofToString(data.device));
+                for( int i = 0; i < Z_DIM; i++){
+                    m.addFloatArg(data.embedding[i]);
+                }
+                sender.sendMessage(m, true);
+            }
         }
     }
 }

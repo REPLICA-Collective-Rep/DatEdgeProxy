@@ -38,19 +38,42 @@ void Simulate::threadedFunction(){
     while( isThreadRunning() ){
 
         for (size_t i = 0; i < settings.sensors.size(); i++ ) {
-
-
             std::ostringstream _msg;
             _msg << "sensors" << " ";      
             _msg << "p" << i << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
-            _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+            switch(2){
+                case 0:
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
+                    break;
+                case 1:
+                    _msg << ofToString( sin(ofGetSystemTimeMillis() * 0.001 + 1 ), 4, 5, 0) << " ";
+                    _msg << ofToString( cos(ofGetSystemTimeMillis() * 0.001 + 2 ), 4, 5, 0) << " ";
+                    _msg << ofToString( sin(ofGetSystemTimeMillis() * 0.001 + 3 ), 4, 5, 0) << " ";
+                    _msg << ofToString( cos(ofGetSystemTimeMillis() * 0.001 + 4 ), 4, 5, 0) << " ";
+                    _msg << ofToString( sin(ofGetSystemTimeMillis() * 0.001 + 5 ), 4, 5, 0) << " ";
+                    _msg << ofToString( cos(ofGetSystemTimeMillis() * 0.001 + 6 ), 4, 5, 0) << " ";
+                    _msg << ofToString( sin(ofGetSystemTimeMillis() * 0.001 + 7 ), 4, 5, 0) << " ";
+                    _msg << ofToString( cos(ofGetSystemTimeMillis() * 0.001 + 8 ), 4, 5, 0) << " ";
+                    break; 
+                case 2:
+                    _msg << ofToString( 0.1, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.2, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.3, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.4, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.5, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.6, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.7, 4, 5, 0) << " ";
+                    _msg << ofToString( 0.8, 4, 5, 0) << " ";
+                    break;
+            }          
+
             _msg << counter;
             _msg <<  ";\n";
 

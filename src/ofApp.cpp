@@ -10,7 +10,7 @@ void ofApp::setup(){
     SimulateSettings   simulateSettings("127.0.0.1");
     WriterSettings     writerSettings("127.0.0.1");
     VisualiserSettings visualiserSettings("127.0.0.1");
-    DataserverSettings dataserverSettings("127.0.0.1");
+    DataserverSettings dataserverSettings("0.0.0.0");
     ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
 
 

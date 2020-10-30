@@ -551,6 +551,22 @@ obj/linux64/Release/src/dataserver.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/of3dUtils.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofCamera.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofEasyCam.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOsc.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscArg.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscMessage.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscSender.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscException.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscBundle.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscReceiver.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq.hpp \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxZmq/libs/zmq/include/zmq.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq_addon.hpp \
@@ -1691,6 +1707,38 @@ obj/linux64/Release/src/dataserver.o: \
 /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofCamera.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofEasyCam.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOsc.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscArg.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscMessage.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscSender.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscException.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscBundle.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscReceiver.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq.hpp:
 
