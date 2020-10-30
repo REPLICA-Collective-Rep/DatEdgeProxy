@@ -10,6 +10,9 @@ struct DataserverSettings {
     std::string  xpub_ip   = "127.0.0.1";
     unsigned int xpub_port = 5555;
 
+    std::string  pub_ip   = "127.0.0.1";
+    unsigned int pub_port = 5554;
+
     int timeout    = 10;
 
 	DataserverSettings(){}
@@ -35,6 +38,7 @@ private:
     bool isSetup = false;    
     DataserverSettings settings;
     shared_ptr<zmq::socket_t> sub;
+    shared_ptr<zmq::socket_t> pub;
 
     std::vector<zmq::poller_event<>> events;
     zmq::poller_t<> poller;

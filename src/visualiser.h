@@ -9,7 +9,7 @@
 
 struct VisualiserSettings {
     std::string  xpub_ip = "127.0.0.1";
-    unsigned int xpub_port = 5555;
+    unsigned int xpub_port = 5554;
 
     int timeout = 10;
 	unsigned int buffer_size = 512;

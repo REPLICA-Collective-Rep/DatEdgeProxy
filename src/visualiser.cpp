@@ -128,45 +128,32 @@ void Visualiser::threadedFunction(){
             zmq::message_t m;
             sub->recv(m);            
             
-            const int numBytes = m.size();
-            const char *src = (const char*)m.data();
+            assert(m.size() == sizeof(SensorData));
+
+            SensorData * data = (SensorData *)(m.data());
             
-            std::string data(src, numBytes);
-
-            int device   ;
-            int mscounter;
-            std::vector<float> raw;    
-
-            if ( parseSensorData(data, device, mscounter, raw)) {
-
-                auto & readings = all_readings[device];
-                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
-                    readings[i].push_back(glm::vec3(mscounter, raw[i], 0));
-                    if( readings[i].size() > settings.buffer_size ){
-                        readings[i].erase(readings[i].begin());
-                    }
+            auto & readings = all_readings[data->device];
+            for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
+                readings[i].push_back(glm::vec3(data->mscounter, data->raw[i], 0));
+                if( readings[i].size() > settings.buffer_size ){
+                    readings[i].erase(readings[i].begin());
                 }
-
-                lock();
-
-                if(all_readings.size() == 1) selected_reading = all_readings.begin();
-                if( selected_reading->first == device ){
-                    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
-                        display_lines[i].clear(); 
-
-                        glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
-                        int size = readings[i].size();
-
-                        display_lines[i].addVertices( verts, size);
-                    }
-
-                }
-
-                unlock();
-
-            } else {
-                ofLogWarning("Visualiser::threadedFunction") << "Could not parse: '" << data << "'";
             }
+
+            lock();
+
+            if(all_readings.size() == 1) selected_reading = all_readings.begin();
+            if( selected_reading->first == data->device ){
+                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
+                    display_lines[i].clear(); 
+
+                    glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
+                    int size = readings[i].size();
+
+                    display_lines[i].addVertices( verts, size);
+                }
+            }
+            unlock();
         }
     }
 }
