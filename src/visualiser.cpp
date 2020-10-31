@@ -62,38 +62,47 @@ void Visualiser::setup(zmq::context_t & ctx, VisualiserSettings settings){
 }
 
 void Visualiser::draw(ofFbo & fbo ){
-    float width  = ofGetWidth();
-    float height = ofGetHeight();
 
-    float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
-    float hOff    = 2.0;
+    if( display_lines.size()!= 0 ){
+        if(display_lines[0].size() >=2 ){
+            float interval = ((display_lines[0].end() - 1)->x - display_lines[0].begin()->x) / display_lines[0].size();
+            float wOff     = display_lines[0].begin()->x;       
+            
+            float width  = ofGetWidth();
+            float height = ofGetHeight();
 
-    float interval = ((display_lines[0].end() - 1)->x - display_lines[0].begin()->x) / display_lines[0].size();
-    float wOff     = display_lines[0].begin()->x;
-    float wScale   = width / ((float)settings.buffer_size * interval) ;
+            float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
+            float hOff    = 2.0;
 
-    ofPushMatrix();
-    ofScale( glm::vec3(wScale, hScale, 0.0));
-    ofTranslate( glm::vec3(-wOff, 1.0, 0.0));
 
-    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){                
-        ofSetColor(colors[i]);
-        display_lines[i].draw();
-        ofTranslate( glm::vec3(0, hOff , 0.0));
+            float wScale   = width / ((float)settings.buffer_size * interval) ;
+
+            lock();
+                ofPushMatrix();
+                ofScale( glm::vec3(wScale, hScale, 0.0));
+                ofTranslate( glm::vec3(-wOff, 1.0, 0.0));
+
+                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){                
+                    ofSetColor(colors[i]);
+                    display_lines[i].draw();
+                    ofTranslate( glm::vec3(0, hOff , 0.0));
+                }
+                ofPopMatrix();
+
+                std::ostringstream log;
+                log << "Suits: \n";
+                for (auto it = all_readings.begin(); it != all_readings.end(); ++it) {
+                    if(it == selected_reading)
+                        log << "  + Suit " << it->first << " (" << it->second[0].back().x << ")\n";
+                    else 
+                        log << "  - Suit " << it->first << " (" << it->second[0].back().x << ")\n";
+                    
+                }
+
+                ofDrawBitmapStringHighlight( log.str(), glm::vec2(ofGetWidth() - 150 , 50));
+            unlock();
+        }
     }
-    ofPopMatrix();
-
-    // std::ostringstream log;
-    // log << "Suits: \n";
-    // for (auto it = all_readings.begin(); it != all_readings.end(); ++it) {
-    //     if(it == selected_reading)
-    //         log << "  + Suit " << it->first << " (" << it->second[0].back().x << ")\n";
-    //     else 
-    //         log << "  - Suit " << it->first << " (" << it->second[0].back().x << ")\n";
-        
-    // }
-
-    ofDrawBitmapStringHighlight( log.str(), glm::vec2(ofGetWidth() - 150 , 50));
 
 }
 
