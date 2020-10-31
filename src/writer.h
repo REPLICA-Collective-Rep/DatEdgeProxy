@@ -11,7 +11,7 @@ struct WriterSettings {
     unsigned int xpub_port = 5554;
 
 
-    int timeout    = 10;
+    int timeout    = 1000;
     unsigned int buffer_size = 512;
 
 	WriterSettings(){}
