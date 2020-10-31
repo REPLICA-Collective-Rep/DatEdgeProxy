@@ -28,7 +28,7 @@ void ofApp::setup(){
     proxy.startThread();
 
     simulate.setup(ctx, simulateSettings);
-    simulate.startThread();
+    //simulate.startThread();
 
 }
 

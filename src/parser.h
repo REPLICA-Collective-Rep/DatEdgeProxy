@@ -17,15 +17,17 @@ struct OutputData {
 };
 
 
-static bool parseSensorData(const std::string & msg, SensorData &data  ){
-    const std::string pttrn1 = "^sensors p(\\d) ((?:(?:[-+]?[0-9]*\\.?[0-9]+) ){8})(\\d+);(?:[\r\n]+)*$";
-    const std::string pttrn2 = "([-+]?[0-9]*\\.?[0-9]+)";
+static bool parseSensorData(const std::string & _msg, SensorData &data  ){
+    const std::string pttrn1 = R"(^sensors p(\d) ((?:(?:[-+]?[0-9]*\.?[0-9]+) ){8})(.+).*$)";
+    const std::string pttrn2 = R"(([-+]?[0-9]*\.?[0-9]+))";
     const std::regex re1(pttrn1);
     const std::regex re2(pttrn2);
 
+    std::string msg = _msg.substr(0, _msg.find(";", 0));
+
     std::smatch match;
     std::smatch fmatch;
-    if (std::regex_match(msg, match, re1) && match.size() > 1) {
+    if (std::regex_match(msg, match, re1) ) {
         data.device              = ofToInt(match.str(1));
         data.mscounter           = ofToInt(match.str(3));
 
