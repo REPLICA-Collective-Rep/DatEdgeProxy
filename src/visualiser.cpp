@@ -137,9 +137,11 @@ void Visualiser::threadedFunction(){
             lock();       
             auto & readings = all_readings[data->device];
             for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
-                readings[i].push_back(glm::vec3(data->mscounter, data->raw[i], 0));
-                if( readings[i].size() > settings.buffer_size ){
-                    readings[i].erase(readings[i].begin());
+                auto & reading = readings[i];
+
+                reading.push_back(glm::vec3(data->mscounter, data->raw[i], 0));
+                if( reading.size() > settings.buffer_size ){
+                    reading.erase(readings[i].begin());
                 }
             }
 
