@@ -132,14 +132,15 @@ void Visualiser::threadedFunction(){
             
             assert(m.size() == sizeof(SensorData));
 
-            SensorData * data = (SensorData *)(m.data());
+            SensorData  data;
+            memcpy(&data, m.data(), sizeof(SensorData));
 
             lock();       
-            auto & readings = all_readings[data->device];
+            auto & readings = all_readings[data.device];
             for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
                 auto & reading = readings[i];
 
-                reading.push_back(glm::vec3(data->mscounter, data->raw[i], 0));
+                reading.push_back(glm::vec3(data.mscounter, data.raw[i], 0));
                 if( reading.size() > settings.buffer_size ){
                     reading.erase(readings[i].begin());
                 }
@@ -148,7 +149,7 @@ void Visualiser::threadedFunction(){
 
 
             if(all_readings.size() == 1) selected_reading = all_readings.begin();
-            if( selected_reading->first == data->device ){
+            if( selected_reading->first == data.device ){
                 for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
                     display_lines[i].clear(); 
 
