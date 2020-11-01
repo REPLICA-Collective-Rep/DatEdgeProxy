@@ -575,7 +575,9 @@ obj/linux64/Debug/src/main.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscReceiver.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dateoptions.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/optionparser.h
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/ofMain.h:
 
@@ -1760,3 +1762,7 @@ obj/linux64/Debug/src/main.o: \
 /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dateoptions.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/optionparser.h:

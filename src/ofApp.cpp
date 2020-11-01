@@ -7,11 +7,11 @@ zmq::context_t ctx;
 void ofApp::setup(){
     //ofSetLogLevel(OF_LOG_VERBOSE);
 
-    SimulateSettings   simulateSettings("192.168.10");
+    SimulateSettings   simulateSettings("127.0.0.1");
     WriterSettings     writerSettings("127.0.0.1");
     VisualiserSettings visualiserSettings("127.0.0.1");
 
-    DataserverSettings dataserverSettings("192.168.10", "127.0.0.1" );
+    DataserverSettings dataserverSettings("127.0.0.1", "127.0.0.1" );
     ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
 
 
