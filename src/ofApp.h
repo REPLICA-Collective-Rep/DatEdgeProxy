@@ -2,6 +2,8 @@
 #include "ofMain.h"
 
 
+#include "dateoptions.h"
+
 #include "proxy.h"
 #include "simulate.h"
 #include "writer.h"
@@ -12,6 +14,11 @@
 class ofApp : public ofBaseApp{
 
 	public:
+
+		ofApp( Args & args ) :
+			ofBaseApp(),
+			args(args)
+			{	}
 
 
 		void setup();
@@ -30,6 +37,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		const Args&  args;
 
 		Proxy proxy;
 		Simulate simulate;

@@ -1,8 +1,5 @@
 #include "writer.h"
 #include "parser.h"
-#include "cnpy.h"
-
-#include "constants.h"
 
 Writer::Writer(){
 
@@ -44,9 +41,16 @@ void Writer::setup(zmq::context_t & ctx, WriterSettings settings){
     }
 
     session = ofGetTimestampString();
-    current_dir = ofDirectory(ofToDataPath(session));
+
+    if(settings.data_root == "")
+        current_dir = ofDirectory(ofToDataPath(session));
+    else
+        current_dir = ofDirectory(ofFilePath::getAbsolutePath(settings.data_root));
+
     if(!current_dir.exists()){
-        current_dir.create();
+        if( !current_dir.create()){
+            ofLogError("Writer::setup") << "Could not create dare folder. " << settings.data_root;
+        }
     }
     
 }

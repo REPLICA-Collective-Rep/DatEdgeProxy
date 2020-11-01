@@ -555,8 +555,8 @@ obj/linux64/Debug/src/writer.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxZmq/libs/zmq/include/zmq.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq_addon.hpp \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/cnpy.h
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/cnpy.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/writer.h:
 
@@ -1700,6 +1700,6 @@ obj/linux64/Debug/src/writer.o: \
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h:
 
-/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h:
-
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/cnpy.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h:

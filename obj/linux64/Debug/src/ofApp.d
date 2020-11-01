@@ -551,6 +551,8 @@ obj/linux64/Debug/src/ofApp.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/of3dUtils.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofCamera.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofEasyCam.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dateoptions.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/optionparser.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/proxy.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq.hpp \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxZmq/libs/zmq/include/zmq.h \
@@ -558,6 +560,7 @@ obj/linux64/Debug/src/ofApp.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/simulate.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/writer.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/cnpy.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dataserver.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOsc.h \
@@ -1711,6 +1714,10 @@ obj/linux64/Debug/src/ofApp.o: \
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofEasyCam.h:
 
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dateoptions.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/optionparser.h:
+
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/proxy.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq.hpp:
@@ -1724,6 +1731,8 @@ obj/linux64/Debug/src/ofApp.o: \
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/writer.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/cnpy.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h:
 

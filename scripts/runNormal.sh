@@ -1,4 +1,4 @@
 #!/bin/bash
 
-DISPLAY=:0 ./bin/DatEdgeProxy
+DISPLAY=:0 ./bin/DatEdgeProxy --debug
 

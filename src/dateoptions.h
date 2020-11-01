@@ -48,28 +48,33 @@ struct Arg: public option::Arg
 };
 
 
-enum  optionIndex { UNKNOWN, HELP, OPTIONAL, REQUIRED, NUMERIC, NONEMPTY };
+enum  optionIndex { DATE_UNKNOWN, DATE_HELP, DATE_DATA_DIR, DATE_DEBUG, DATE_PROXY, DATE_OSC_IP };
 const option::Descriptor usage[] = {
-{ UNKNOWN, 0,"", "",        Arg::Unknown, "USAGE: example_arg [options]\n\n"
+{ DATE_UNKNOWN, 0,"", "",         Arg::Unknown, "USAGE: example_arg [options]\n\n"
                                           "Options:" },
-{ HELP,    0,"", "help",    Arg::None,    "  \t--help  \tPrint usage and exit." },
-{ OPTIONAL,0,"o","optional",Arg::Optional,"  -o[<arg>], \t--optional[=<arg>]"
-                                          "  \tTakes an argument but is happy without one." },
-{ REQUIRED,0,"r","required",Arg::Required,"  -r <arg>, \t--required=<arg>  \tMust have an argument." },
-{ NUMERIC, 0,"n","numeric", Arg::Numeric, "  -n <num>, \t--numeric=<num>  \tRequires a number as argument." },
-{ NONEMPTY,0,"1","nonempty",Arg::NonEmpty,"  -1 <arg>, \t--nonempty=<arg>"
-                                          "  \tCan NOT take the empty string as argument." },
-{ UNKNOWN, 0,"", "",        Arg::None,
+{ DATE_HELP,    0,"", "help",     Arg::None,    "  \t--help  \tPrint usage and exit." },
+{ DATE_DATA_DIR,0,"o","data_root" ,Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
+{ DATE_DEBUG   ,0,"p","proxy"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
+{ DATE_PROXY   ,0,"d","debug"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
+{ DATE_OSC_IP  ,0,"","osc_ip     ",Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
+{ DATE_UNKNOWN, 0,"", "",         Arg::None,
  "\nExamples:\n"
  "  example_arg --unknown -o -n10 \n"
 },
 { 0, 0, 0, 0, 0, 0 } };
 
 
-class OptionsParser{
+class Args {
 
 public:
-    OptionsParser(int argc, char *argv[]){
+    bool           proxy = false;
+    bool           debug = false;
+    std::string data_root = "";
+    std::string   osc_ip = "127.0.0.1";
+
+    Args(){};
+
+    Args(int argc, char *argv[]) {
         argc-=(argc>0); argv+=(argc>0); // skip program name argv[0] if present
         option::Stats  stats(usage, argc, argv);
         std::vector<option::Option> options(stats.options_max);
@@ -83,25 +88,19 @@ public:
                 fprintf(stdout, "Argument #%d is ", i);
                 switch (opt.index())
                 {
-                case HELP:
-                    fprintf(stdout, "--help was pressed\n", opt.arg);
+                case DATE_HELP:
+                    fprintf(stdout, "--help was pressed\n");
                     break;
-                case OPTIONAL:
-                    if (opt.arg)
-                    fprintf(stdout, "--optional with optional argument '%s'\n", opt.arg);
-                    else
-                    fprintf(stdout, "--optional without the optional argument\n");
+                case DATE_DATA_DIR:
+                    data_root = std::string(opt.arg);
                     break;
-                case REQUIRED:
-                    fprintf(stdout, "--required with argument '%s'\n", opt.arg);
+                case DATE_PROXY:
+                    proxy = true;
                     break;
-                case NUMERIC:
-                    fprintf(stdout, "--numeric with argument '%s'\n", opt.arg);
+                case DATE_OSC_IP:
+                    data_root = std::string(opt.arg);
                     break;
-                case NONEMPTY:
-                    fprintf(stdout, "--nonempty with argument '%s'\n", opt.arg);
-                    break;
-                case UNKNOWN:
+                case DATE_UNKNOWN:
                     // not possible because Arg::Unknown returns ARG_ILLEGAL
                     // which aborts the parse with an error
                     break;

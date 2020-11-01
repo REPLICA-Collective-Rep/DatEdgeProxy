@@ -4,9 +4,9 @@
 
 //========================================================================
 int main(int argc, char *argv[] ){	// <-------- setup the GL context
-	OptionsParser parser = OptionsParser(argc, argv);
+	Args args = Args(argc, argv);
 
 	ofSetupOpenGL(1024,768,OF_WINDOW);		
-	ofRunApp(new ofApp());
+	ofRunApp(new ofApp(args));
 
 }

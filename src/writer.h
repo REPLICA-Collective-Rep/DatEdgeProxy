@@ -5,16 +5,21 @@
 #include "zmq_addon.hpp"
 
 #include "constants.h"
+#include "cnpy.h"
 
 struct WriterSettings {
-    std::string  xpub_ip   = "127.0.0.1";
+    std::string  data_root;
+
+
+    std::string  xpub_ip;
     unsigned int xpub_port = 5554;
 
     int timeout    = 1000;
     unsigned int buffer_size = 512;
 
 	WriterSettings(){}
-	WriterSettings(std::string xpub_ip):
+	WriterSettings(std::string xpub_ip, const std::string & data_root):
+        data_root(data_root),
         xpub_ip(xpub_ip)
     {}
 };

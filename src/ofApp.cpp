@@ -6,12 +6,20 @@ zmq::context_t ctx;
 //--------------------------------------------------------------
 void ofApp::setup(){
     //ofSetLogLevel(OF_LOG_VERBOSE);
+    const std::string proxy_addr = "192.168.0.10";
 
-    SimulateSettings   simulateSettings("127.0.0.1");
-    WriterSettings     writerSettings("127.0.0.1");
-    VisualiserSettings visualiserSettings("127.0.0.1");
+    SimulateSettings   simulateSettings(proxy_addr);
+    WriterSettings     writerSettings(proxy_addr, args.data_root);
+    VisualiserSettings visualiserSettings(proxy_addr);
 
-    DataserverSettings dataserverSettings("127.0.0.1", "127.0.0.1" );
+    if( args.debug){
+        simulateSettings.xsub_ip   = "127.0.0.1";
+        writerSettings.xpub_ip     = "127.0.0.1";
+        visualiserSettings.xpub_ip = "127.0.0.1";
+    }
+
+
+    DataserverSettings dataserverSettings(proxy_addr, args.osc_ip );
     ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
 
 
@@ -25,11 +33,15 @@ void ofApp::setup(){
     visualiser.setup(ctx, visualiserSettings);
     visualiser.startThread();
 
-    proxy.setup(ctx, proxySettings);
-    proxy.startThread();
+    if(args.proxy){
+        proxy.setup(ctx, proxySettings);
+        proxy.startThread();
+    } else {
+        simulate.setup(ctx, simulateSettings);
+        //simulate.startThread();
+    }
 
-    simulate.setup(ctx, simulateSettings);
-    //simulate.startThread();
+
 
 }
 
@@ -47,7 +59,7 @@ void ofApp::draw(){
     log << "\n";
     log << "simulate   (s): "  << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
     log << "writer     (w): "  << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
-    log << "proxy      (p): "  << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
+    if(args.proxy) log << "proxy      (p): "  << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
     log << "visualiser (v): "  << (visualiser.isThreadRunning() ? "ON" : "OFF");
 
     ofDrawBitmapStringHighlight( log.str(), 50 , 50);
@@ -57,6 +69,7 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     switch(key){
     case 's':
+        if(args.proxy) break;
         if(!simulate.isThreadRunning()){
             simulate.startThread();
         } else {
@@ -72,6 +85,7 @@ void ofApp::keyPressed(int key){
       break;
         break;
     case 'p':
+        if(!args.proxy) break;
         if(!proxy.isThreadRunning()){
             proxy.startThread();
         } else {
