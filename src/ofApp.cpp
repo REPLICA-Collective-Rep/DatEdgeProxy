@@ -12,15 +12,19 @@ void ofApp::setup(){
     WriterSettings     writerSettings(proxy_addr, args.data_root);
     VisualiserSettings visualiserSettings(proxy_addr);
 
+    DataserverSettings dataserverSettings(proxy_addr, args.osc_ip );
+    ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
+
     if( args.debug){
+        proxySettings.xsub_ip =  "127.0.0.1";
+        proxySettings.xpub_ip =  "127.0.0.1";
+
         simulateSettings.xsub_ip   = "127.0.0.1";
         writerSettings.xpub_ip     = "127.0.0.1";
         visualiserSettings.xpub_ip = "127.0.0.1";
     }
 
 
-    DataserverSettings dataserverSettings(proxy_addr, args.osc_ip );
-    ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
 
 
 
@@ -33,7 +37,7 @@ void ofApp::setup(){
     visualiser.setup(ctx, visualiserSettings);
     visualiser.startThread();
 
-    if(args.proxy){
+    if(args.proxy || args.debug){
         proxy.setup(ctx, proxySettings);
         proxy.startThread();
     } else {

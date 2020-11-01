@@ -156,7 +156,7 @@ void Visualiser::threadedFunction(){
                     if(reading.size() != 0 && 
                         (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
                     {
-                        ofLogError("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
+                        ofLogVerbose("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
                         reading.clear();
                         //reading.back().x += DATE_TARGET_INTERVAL_MS;
                     }
