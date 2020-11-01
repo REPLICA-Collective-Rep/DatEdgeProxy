@@ -145,10 +145,7 @@ void Visualiser::threadedFunction(){
                     reading.erase(readings[i].begin());
                 }
             }
-
-
-
-            if(all_readings.size() == 1) selected_reading = all_readings.begin();
+            if( all_readings.size() == 1) selected_reading = all_readings.begin();
             if( selected_reading->first == data.device ){
                 for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
                     display_lines[i].clear(); 
