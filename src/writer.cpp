@@ -76,7 +76,8 @@ void Writer::threadedFunction(){
             
             assert(m.size() == sizeof(SensorData));
 
-            SensorData * data = (SensorData *)(m.data());
+            SensorData  data;
+            memcpy(&data, m.data(), sizeof(SensorData));
 
                 
             auto buffer = buffers.find(data->device);
