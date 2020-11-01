@@ -80,18 +80,18 @@ void Writer::threadedFunction(){
             memcpy(&data, m.data(), sizeof(SensorData));
 
                 
-            auto buffer = buffers.find(data->device);
+            auto buffer = buffers.find(data.device);
             if(  buffer == buffers.end()){ 
-                std::string path = ofToString(data->device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npy";
+                std::string path = ofToString(data.device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npy";
 
-                buffers[data->device] = bufferInfo( ofFilePath::join( current_dir, path));
+                buffers[data.device] = bufferInfo( ofFilePath::join( current_dir, path));
                         
-                buffer = buffers.find(data->device);
+                buffer = buffers.find(data.device);
             }
 
-            buffer->second.data.push_back( data->mscounter );
+            buffer->second.data.push_back( data.mscounter );
             for(int i = 1; i < DATE_NUM_CHANNELS + 1; i++ ){
-                    buffer->second.data.push_back( data->raw[i - 1]);
+                    buffer->second.data.push_back( data.raw[i - 1]);
             }
 
             if(buffer->second.data.size() >= settings.buffer_size ){
