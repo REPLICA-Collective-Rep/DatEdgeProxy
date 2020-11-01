@@ -9,11 +9,11 @@ void ofApp::setup(){
     const std::string proxy_addr = "192.168.0.10";
 
     SimulateSettings   simulateSettings(proxy_addr);
-    WriterSettings     writerSettings(proxy_addr, args.data_root);
+    WriterSettings     writerSettings  (proxy_addr, args.data_root);
     VisualiserSettings visualiserSettings(proxy_addr);
 
     DataserverSettings dataserverSettings(proxy_addr, args.osc_ip );
-    ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
+    ProxySettings      proxySettings("0.0.0.0");
 
     if( args.debug){
         ofLogNotice("ofApp::setup") << "DEBUG MODE";
@@ -40,12 +40,10 @@ void ofApp::setup(){
     if(args.proxy){
         proxy.setup(ctx, proxySettings);
         proxy.startThread();
-    } else {
-        simulate.setup(ctx, simulateSettings);
-        //simulate.startThread();
     }
 
-
+    simulate.setup(ctx, simulateSettings);
+    simulate.startThread();
 
 }
 
@@ -73,7 +71,6 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     switch(key){
     case 's':
-        if(args.proxy) break;
         if(!simulate.isThreadRunning()){
             simulate.startThread();
         } else {

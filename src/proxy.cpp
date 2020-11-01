@@ -44,7 +44,7 @@ void Proxy::threadedFunction(){
         ofLogError("Proxy::threadedFunction") << "Not setup!!";
         return;
     }
-    ofLogNotice("Proxy::threadedFunction") << "Starting proxy on " << xpub_ip;
+    ofLogNotice("Proxy::threadedFunction") << "Starting proxy on " << settings.xpub_ip;
     while( isThreadRunning() ){
 
         const std::chrono::milliseconds _timeout(this->settings.timeout);

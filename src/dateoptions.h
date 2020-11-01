@@ -94,6 +94,9 @@ public:
                 case DATE_DATA_DIR:
                     data_root = std::string(opt.arg);
                     break;
+                case DATE_DEBUG:
+                    debug = true;
+                    break;
                 case DATE_PROXY:
                     proxy = true;
                     break;
