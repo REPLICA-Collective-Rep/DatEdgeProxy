@@ -112,7 +112,12 @@ void Visualiser::threadedFunction(){
         ofLogError("Visualiser::threadedFunction") << "Not setup!!";
         return;
     }
-   
+
+    for( int i ; i < display_lines.size(); i++ )
+        display_lines[i].clear();
+
+    all_readings.clear();
+    selected_reading = all_readings.begin();
 
     while( isThreadRunning() ){
         
@@ -127,36 +132,55 @@ void Visualiser::threadedFunction(){
         ofLogVerbose("Visualiser::threadedFunction") << "Got " << nin << " events";
         
         for (unsigned int ind=0; ind<nin; ++ind) {
+            int32_t more;
+            size_t more_size = sizeof(more);            
+
             zmq::message_t m;
-            sub->recv(m);            
-            
-            assert(m.size() == sizeof(SensorData));
+            sub->recv(&m);            
+            sub->getsockopt(ZMQ_RCVMORE, &more, &more_size);
 
-            SensorData  data;
-            memcpy(&data, m.data(), sizeof(SensorData));
+            auto size = sizeof(SensorData);
 
-            lock();       
-            auto & readings = all_readings[data.device];
-            for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
-                auto & reading = readings[i];
+            if(m.size() == sizeof(SensorData) || true){
 
-                reading.push_back(glm::vec3(data.mscounter, data.raw[i], 0));
-                if( reading.size() > settings.buffer_size ){
-                    reading.erase(readings[i].begin());
+                SensorData  data;
+                memcpy(&data, m.data(), m.size());
+
+                lock();       
+                auto & readings = all_readings[data.device];
+                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
+                    auto & reading = readings[i];
+
+                    glm::vec3 point(data.mscounter, data.raw[i], 0);
+
+                    if(reading.size() != 0 && 
+                        (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
+                    {
+                        ofLogError("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
+                        reading.clear();
+                        //reading.back().x += DATE_TARGET_INTERVAL_MS;
+                    }
+
+                    reading.push_back(point);
+                    if( reading.size() > settings.buffer_size ){
+                        reading.erase(readings[i].begin());
+                    }
                 }
-            }
-            if( all_readings.size() == 1) selected_reading = all_readings.begin();
-            if( selected_reading->first == data.device ){
-                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
-                    display_lines[i].clear(); 
+                if( all_readings.size() == 1) selected_reading = all_readings.begin();
+                if( selected_reading->first == data.device ){
+                    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
+                        display_lines[i].clear(); 
 
-                    glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
-                    int size = readings[i].size();
+                        glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
 
-                    display_lines[i].addVertices( verts, size);
+                        int size = readings[i].size();
+
+                        display_lines[i].addVertices( verts, size);
+
+                    }
                 }
-            }
-            unlock();
+                unlock();
+            };
         }
     }
 }

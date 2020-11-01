@@ -78,10 +78,11 @@ void Dataserver::threadedFunction(){
 
             if(socket == *sub){
                 sub->recv(msg);    
-                std::string str((char *)msg.data(), msg.size());  
+                std::string str =  msg.to_string();  
 
                 SensorData data;
                 if ( parseSensorData(str, data)) {
+
                     msg = zmq::message_t( (void *)&data, sizeof(data) );
                     pub_core->send(msg);
 

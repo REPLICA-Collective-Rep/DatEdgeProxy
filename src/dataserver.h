@@ -23,8 +23,9 @@ struct DataserverSettings {
     int timeout    = 10;
 
 	DataserverSettings(){}
-	DataserverSettings(std::string xpub_ip):
-        xpub_ip(xpub_ip)
+	DataserverSettings(std::string xpub_ip, std::string osc_ip):
+        xpub_ip(xpub_ip),
+        osc_ip(osc_ip)
     {}
 };
 

@@ -73,33 +73,34 @@ void Writer::threadedFunction(){
         for (unsigned int ind=0; ind<nin; ++ind) {
             zmq::message_t m;
             sub->recv(m);            
-            
-            assert(m.size() == sizeof(SensorData));
 
             SensorData  data;
             memcpy(&data, m.data(), sizeof(SensorData));
 
-                
-            auto buffer = buffers.find(data.device);
-            if(  buffer == buffers.end()){ 
-                std::string path = ofToString(data.device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npy";
+            if( m.size() == sizeof(SensorData)){
+                    
+                auto buffer = buffers.find(data.device);
+                if(  buffer == buffers.end()){ 
+                    std::string path = ofToString(data.device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npy";
 
-                buffers[data.device] = bufferInfo( ofFilePath::join( current_dir, path));
-                        
-                buffer = buffers.find(data.device);
+                    buffers[data.device] = bufferInfo( ofFilePath::join( current_dir, path));
+                            
+                    buffer = buffers.find(data.device);
+                }
+
+                buffer->second.data.push_back( data.mscounter );
+                for(int i = 1; i < DATE_NUM_CHANNELS + 1; i++ ){
+                        buffer->second.data.push_back( data.raw[i - 1]);
+                }
+
+                if(buffer->second.data.size() >= settings.buffer_size ){
+
+                    cnpy::npy_save(buffer->second.path, &((buffer->second.data)[0]), { buffer->second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
+                    buffer->second.data.clear();
+                }
+            } else {
+                ofLogWarning("Writer::threadedFunction") << m.to_string();
             }
-
-            buffer->second.data.push_back( data.mscounter );
-            for(int i = 1; i < DATE_NUM_CHANNELS + 1; i++ ){
-                    buffer->second.data.push_back( data.raw[i - 1]);
-            }
-
-            if(buffer->second.data.size() >= settings.buffer_size ){
-
-                cnpy::npy_save(buffer->second.path, &((buffer->second.data)[0]), { buffer->second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
-                buffer->second.data.clear();
-            }
-
   
         }
     }
