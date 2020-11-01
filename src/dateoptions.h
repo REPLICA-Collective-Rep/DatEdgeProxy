@@ -54,8 +54,8 @@ const option::Descriptor usage[] = {
                                           "Options:" },
 { DATE_HELP,    0,"", "help",     Arg::None,    "  \t--help  \tPrint usage and exit." },
 { DATE_DATA_DIR,0,"o","data_root" ,Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
-{ DATE_DEBUG   ,0,"p","proxy"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
-{ DATE_PROXY   ,0,"d","debug"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
+{ DATE_PROXY   ,0,"p","proxy"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
+{ DATE_DEBUG   ,0,"d","debug"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
 { DATE_OSC_IP  ,0,"","osc_ip     ",Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
 { DATE_UNKNOWN, 0,"", "",         Arg::None,
  "\nExamples:\n"
