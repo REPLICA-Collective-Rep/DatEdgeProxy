@@ -15,9 +15,8 @@ struct ProxySettings {
     unsigned int timeout   = 100;
 
     ProxySettings(){}
-    ProxySettings(std::string xpub_ip, std::string xsub_ip):
-        xpub_ip(xpub_ip),
-        xsub_ip(xsub_ip) 
+    ProxySettings(std::string xpub_ip):
+        xpub_ip(xpub_ip)
     {}
 };
 

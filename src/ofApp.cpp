@@ -5,7 +5,7 @@ zmq::context_t ctx;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    //ofSetLogLevel(OF_LOG_VERBOSE);
+
     const std::string proxy_addr = "192.168.0.10";
 
     SimulateSettings   simulateSettings(proxy_addr);
@@ -16,6 +16,9 @@ void ofApp::setup(){
     ProxySettings      proxySettings("0.0.0.0", "0.0.0.0");
 
     if( args.debug){
+        ofLogNotice("ofApp::setup") << "DEBUG MODE";
+        ofSetLogLevel(OF_LOG_VERBOSE);
+
         proxySettings.xsub_ip =  "127.0.0.1";
         proxySettings.xpub_ip =  "127.0.0.1";
 
@@ -23,9 +26,6 @@ void ofApp::setup(){
         writerSettings.xpub_ip     = "127.0.0.1";
         visualiserSettings.xpub_ip = "127.0.0.1";
     }
-
-
-
 
 
     dataserver.setup(ctx, dataserverSettings);
@@ -37,7 +37,7 @@ void ofApp::setup(){
     visualiser.setup(ctx, visualiserSettings);
     visualiser.startThread();
 
-    if(args.proxy || args.debug){
+    if(args.proxy){
         proxy.setup(ctx, proxySettings);
         proxy.startThread();
     } else {
