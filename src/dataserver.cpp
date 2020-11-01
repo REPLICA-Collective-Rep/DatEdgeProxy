@@ -92,7 +92,7 @@ void Dataserver::threadedFunction(){
                     }
                     sender.sendMessage(m, true);
                 } else {
-                    ofLogWarning("Dataserver::threadedFunction") << "Could not parse: '" << msg << "'";
+g                    ofLogWarning("Dataserver::threadedFunction") << "Could not parse: '" << msg << "'";
                 }
             }
 
