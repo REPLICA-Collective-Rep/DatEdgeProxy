@@ -2,7 +2,7 @@
 #include "parser.h"
 
 Writer::Writer(){
-
+    subsession = 0;
 }
 
 Writer::~Writer(){
