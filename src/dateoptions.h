@@ -78,7 +78,7 @@ public:
         argc-=(argc>0); argv+=(argc>0); // skip program name argv[0] if present
         option::Stats  stats(usage, argc, argv);
         std::vector<option::Option> options(stats.options_max);
-        std::vector<option::Option> bumakr 
+        std::vector<option::Option> buffer(stats.buffer_max);
         option::Parser parse(usage, argc, argv, &options[0], &buffer[0]);
 
         if (!parse.error()){

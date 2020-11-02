@@ -7,9 +7,9 @@ int main(int argc, char *argv[] ){	// <-------- setup the GL context
 	Args args = Args(argc, argv);
 
 
-	if(args.debug):
+	if(args.debug)
 		ofSetupOpenGL(1024,768,OF_WINDOW);		
-	else:
+	else
 		ofSetupOpenGL(1024,768,OF_FULLSCREEN);	
 
 	ofRunApp(new ofApp(args));

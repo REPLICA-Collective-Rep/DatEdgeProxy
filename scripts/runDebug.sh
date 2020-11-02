@@ -1,3 +1,3 @@
 #!/bin/bash
-
-DISPLAY=:0 ./bin/DatEdgeProxy --debug
+cd "${0%/*}"
+DISPLAY=:0 /./bin/DatEdgeProxy --debug
