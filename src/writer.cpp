@@ -45,14 +45,14 @@ void Writer::setup(zmq::context_t & ctx, WriterSettings settings){
     if(settings.data_root == "")
         current_dir = ofDirectory(ofToDataPath(session));
     else
-        current_dir = ofDirectory(ofFilePath::getAbsolutePath(settings.data_root));
+        current_dir = ofDirectory(ofFilePath::join(ofFilePath::getAbsolutePath(settings.data_root), session));
 
-    if(!current_dir.exists()){
-        if( !current_dir.create()){
-            ofLogError("Writer::setup") << "Could not create dare folder. " << settings.data_root;
-        }
+
+
+    if(!current_dir.exists()) {
+        if(!current_dir.create(true))
+            ofLogError("Writer::setup") << "Could not create data folder. " << current_dir.path();
     }
-    
 }
 
 void Writer::threadedFunction(){
