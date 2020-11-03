@@ -10,7 +10,7 @@ struct SimulateSettings {
 
     unsigned int interval   = 20;
     vector<int> sensors {
-        1,2,3,4,5,6,7
+        1,2,3,4,5,6
     };
 
     SimulateSettings(){}

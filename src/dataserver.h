@@ -8,7 +8,7 @@
 #include "constants.h"
 
 struct DataserverSettings {
-    std::string  xpub_ip   = "127.0.0.1";
+    std::string  xpub_ip   =  "0.0.0.0";
     unsigned int xpub_port = 5555;
 
     std::string  pub_ip   = "0.0.0.0";
@@ -20,7 +20,7 @@ struct DataserverSettings {
     std::string osc_ip = "127.0.0.1";
     unsigned int osc_port = 5558;
 
-    int timeout    = 10;
+    int timeout    = 100;
 
 	DataserverSettings(){}
 	DataserverSettings(std::string xpub_ip, std::string osc_ip):

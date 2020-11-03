@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "enter program name, for example ${workspaceRoot}/a.out",
-            "args": ["--debug",  "--data_root", "/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/bin/data/_tmp" ],
+            "args": ["--debug", "--proxy" ],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],

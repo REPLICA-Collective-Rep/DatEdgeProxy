@@ -24,7 +24,7 @@ void Dataserver::setup(zmq::context_t & ctx, DataserverSettings settings){
         std::ostringstream xpub_addr; xpub_addr << "tcp://" << settings.xpub_ip << ":" << ofToString(settings.xpub_port);
         sub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
         sub->connect(xpub_addr.str());
-        sub->set(zmq::sockopt::subscribe, "sensor");
+        sub->set(zmq::sockopt::subscribe, "");
 
         std::ostringstream pub_addr; pub_addr << "tcp://" << settings.pub_ip << ":" << ofToString(settings.pub_port);
         pub_core = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);

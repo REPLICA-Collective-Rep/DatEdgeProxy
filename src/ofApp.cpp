@@ -18,18 +18,11 @@ void ofApp::setup(){
     if( args.debug){
         ofLogNotice("ofApp::setup") << "DEBUG MODE";
         ofSetLogLevel(OF_LOG_VERBOSE);
-
-        proxySettings.xsub_ip =  "127.0.0.1";
-        proxySettings.xpub_ip =  "127.0.0.1";
-
         simulateSettings.xsub_ip   = "127.0.0.1";
         writerSettings.xpub_ip     = "127.0.0.1";
         visualiserSettings.xpub_ip = "127.0.0.1";
     }
 
-
-    dataserver.setup(ctx, dataserverSettings);
-    dataserver.startThread();
 
     writer.setup(ctx, writerSettings);
     writer.startThread();
@@ -38,9 +31,15 @@ void ofApp::setup(){
     visualiser.startThread();
 
     if(args.proxy){
+        dataserverSettings.xpub_ip = "127.0.0.1";
+
         proxy.setup(ctx, proxySettings);
         proxy.startThread();
     }
+
+    dataserver.setup(ctx, dataserverSettings);
+    dataserver.startThread();
+
 
     simulate.setup(ctx, simulateSettings);
  //   simulate.startThread();

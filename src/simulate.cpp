@@ -40,7 +40,7 @@ void Simulate::threadedFunction(){
         for (size_t i = 0; i < settings.sensors.size(); i++ ) {
             std::ostringstream _msg;
             _msg << "sensors" << " ";      
-            _msg << "p" << i << " ";
+            _msg << "p" << settings.sensors[i] << " ";
             switch(2){
                 case 0:
                     _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
@@ -74,7 +74,7 @@ void Simulate::threadedFunction(){
                     break;
             }          
 
-            _msg << counter;
+            _msg << (float)counter;
             _msg <<  ";\n";
 
             std::string str_msg = _msg.str();
