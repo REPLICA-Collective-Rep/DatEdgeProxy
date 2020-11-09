@@ -11,6 +11,9 @@ struct VisualiserSettings {
     std::string  xpub_ip = "127.0.0.1";
     unsigned int xpub_port = 5554;
 
+	std::string  sub_ip   = "0.0.0.0";
+    unsigned int sub_port = 5553;
+
     int timeout = 200;
 	unsigned int buffer_size = 512;
 
@@ -43,6 +46,7 @@ private:
     bool isSetup = false;    
     VisualiserSettings settings;
     shared_ptr<zmq::socket_t> sub;
+    shared_ptr<zmq::socket_t> sub_core;
 
     std::vector<zmq::poller_event<>> events;
     zmq::poller_t<> poller;

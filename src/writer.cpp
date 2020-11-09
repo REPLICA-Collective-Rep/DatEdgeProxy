@@ -85,9 +85,9 @@ void Writer::threadedFunction(){
                     
                 auto buffer = buffers.find(data.device);
                 if(  buffer == buffers.end()){ 
-                    std::string path = ofToString(data.device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0') + ".npy";
+                    std::string base_path = ofToString(data.device, 2, 2, '0') + "-" + ofToString(subsession, 2, 2, '0');
 
-                    buffers[data.device] = bufferInfo( ofFilePath::join( current_dir, path));
+                    buffers[data.device] = bufferInfo( ofFilePath::join( current_dir, base_path));
                             
                     buffer = buffers.find(data.device);
                 }
@@ -98,9 +98,7 @@ void Writer::threadedFunction(){
                 }
 
                 if(buffer->second.data.size() >= settings.buffer_size ){
-
-                    cnpy::npy_save(buffer->second.path, &((buffer->second.data)[0]), { buffer->second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
-                    buffer->second.data.clear();
+                    buffer->second.save();
                 }
             } else {
                 ofLogWarning("Writer::threadedFunction") << m.to_string();
@@ -110,7 +108,7 @@ void Writer::threadedFunction(){
     }
 
     for( auto & buffer : buffers){
-        cnpy::npy_save(buffer.second.path,&((buffer.second.data)[0]),{ buffer.second.data.size(), DATE_NUM_CHANNELS + 1}, "w");
+        buffer.second.save();
     }
     buffers.clear();
 

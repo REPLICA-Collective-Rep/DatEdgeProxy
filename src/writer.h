@@ -15,7 +15,7 @@ struct WriterSettings {
     unsigned int xpub_port = 5554;
 
     int timeout    = 1000;
-    unsigned int buffer_size = 512;
+    unsigned int buffer_size = 15000;
 
 	WriterSettings(){}
 	WriterSettings(std::string xpub_ip, const std::string & data_root):
@@ -44,6 +44,15 @@ private:
         
         bufferInfo(std::string path): path(path){}
         bufferInfo() {}
+
+        void save(){
+            std::string npypath = path + ofToString(i++, 3, '0') + ".npy";
+            cnpy::npy_save( npypath, &(data[0]), { data.size(), DATE_NUM_CHANNELS + 1}, "w");
+            data.clear();
+        }
+
+    private:
+        unsigned int i = 0;
     };
 
     bool isSetup = false;    

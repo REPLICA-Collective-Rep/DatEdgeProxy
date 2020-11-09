@@ -50,9 +50,15 @@ void Visualiser::setup(zmq::context_t & ctx, VisualiserSettings settings){
         sub->connect(pub_addr.str());
         sub->set(zmq::sockopt::subscribe, "");
 
+            std::ostringstream sub_addr; sub_addr << "tcp://" << settings.sub_ip << ":" << ofToString(settings.sub_port);
+        sub_core = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
+        sub_core->connect(sub_addr.str());
+        sub_core->set(zmq::sockopt::subscribe, "");
 
+
+        poller.add(*sub_core, zmq::event_flags::pollin);
         poller.add(*sub, zmq::event_flags::pollin);
-        events = std::vector<zmq::poller_event<>>(1);
+        events = std::vector<zmq::poller_event<>>(2);
 
         isSetup = true;   
     }
@@ -132,55 +138,70 @@ void Visualiser::threadedFunction(){
         ofLogVerbose("Visualiser::threadedFunction") << "Got " << nin << " events";
         
         for (unsigned int ind=0; ind<nin; ++ind) {
-            int32_t more;
-            size_t more_size = sizeof(more);            
 
-            zmq::message_t m;
-            sub->recv(&m);            
-            sub->getsockopt(ZMQ_RCVMORE, &more, &more_size);
+            zmq::message_t msg;
+            auto socket = events[ind].socket;
 
-            auto size = sizeof(SensorData);
+            if(socket == *sub_core){
+                sub_core->recv(msg);             
 
-            if(m.size() == sizeof(SensorData) || true){
 
-                SensorData  data;
-                memcpy(&data, m.data(), m.size());
+                if(msg.size() == sizeof(OutputData) || true){
+                    OutputData data;
+                    memcpy(&data, msg.data(), msg.size());
+                    memcpy(msg.data(), &data, sizeof(OutputData));
 
-                lock();       
-                auto & readings = all_readings[data.device];
-                for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
-                    auto & reading = readings[i];
-
-                    glm::vec3 point(data.mscounter, data.raw[i], 0);
-
-                    if(reading.size() != 0 && 
-                        (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
-                    {
-                        ofLogVerbose("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
-                        reading.clear();
-                        //reading.back().x += DATE_TARGET_INTERVAL_MS;
-                    }
-
-                    reading.push_back(point);
-                    if( reading.size() > settings.buffer_size ){
-                        reading.erase(readings[i].begin());
-                    }
+                    
                 }
-                if( all_readings.size() == 1) selected_reading = all_readings.begin();
-                if( selected_reading->first == data.device ){
-                    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
-                        display_lines[i].clear(); 
+            }
 
-                        glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
+            if(socket == *sub){
 
-                        int size = readings[i].size();
+                sub->recv(&msg);            
 
-                        display_lines[i].addVertices( verts, size);
+                auto size = sizeof(SensorData);
 
+                if(msg.size() == sizeof(SensorData) || true){
+
+                    SensorData  data;
+                    memcpy(&data, msg.data(), msg.size());
+
+                    lock();       
+                    auto & readings = all_readings[data.device];
+                    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
+                        auto & reading = readings[i];
+
+                        glm::vec3 point(data.mscounter, data.raw[i], 0);
+
+                        if(reading.size() != 0 && 
+                            (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
+                        {
+                            ofLogVerbose("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
+                            reading.clear();
+                            //reading.back().x += DATE_TARGET_INTERVAL_MS;
+                        }
+
+                        reading.push_back(point);
+                        if( reading.size() > settings.buffer_size ){
+                            reading.erase(readings[i].begin());
+                        }
                     }
-                }
-                unlock();
-            };
+                    if( all_readings.size() == 1) selected_reading = all_readings.begin();
+                    if( selected_reading->first == data.device ){
+                        for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
+                            display_lines[i].clear(); 
+
+                            glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
+
+                            int size = readings[i].size();
+
+                            display_lines[i].addVertices( verts, size);
+
+                        }
+                    }
+                    unlock();
+                };
+            }
         }
     }
 }
