@@ -15,7 +15,7 @@ struct WriterSettings {
     unsigned int xpub_port = 5554;
 
     int timeout    = 1000;
-    unsigned int buffer_size = 15000;
+    unsigned int buffer_size = 10000;
 
 	WriterSettings(){}
 	WriterSettings(std::string xpub_ip, const std::string & data_root):
@@ -47,7 +47,16 @@ private:
 
         void save(){
             std::string npypath = path + ofToString(i++, 3, '0') + ".npy";
-            cnpy::npy_save( npypath, &(data[0]), { data.size(), DATE_NUM_CHANNELS + 1}, "w");
+
+            int rows = data.size() / (DATE_NUM_CHANNELS + 1);
+            int cols = DATE_NUM_CHANNELS + 1;
+
+            if( rows * cols != data.size()){
+                ofLogWarning("bufferInfo::save") << "Data corrupt";
+            } else {
+                cnpy::npy_save( npypath, &(data[0]), { rows, cols}, "w");
+            }
+
             data.clear();
         }
 
