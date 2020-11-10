@@ -105,7 +105,6 @@ void Dataserver::threadedFunction(){
             if(socket == *sub_core){
                 sub_core->recv(msg);       
 
-                ofLogNotice("Dataserver::threadedFunction") << msg.size() <<  "/" << sizeof(OutputData);
                 if( msg.size() == sizeof(OutputData)){
                     OutputData data;
                     memcpy(&data, msg.data(), sizeof(OutputData));
