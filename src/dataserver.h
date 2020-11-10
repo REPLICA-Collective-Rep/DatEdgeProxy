@@ -17,7 +17,7 @@ struct DataserverSettings {
     std::string  sub_ip   = "0.0.0.0";
     unsigned int sub_port = 5553;
 
-    std::string osc_ip = "127.0.0.1";
+    std::string osc_ip = "192.168.0.143";
     unsigned int osc_port = 5558;
 
     int timeout    = 100;

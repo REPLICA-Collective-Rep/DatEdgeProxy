@@ -55,8 +55,8 @@ const option::Descriptor usage[] = {
 { DATE_HELP,    0,"", "help",     Arg::None,    "  \t--help  \tPrint usage and exit." },
 { DATE_DATA_DIR,0,"o","data_root" ,Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
 { DATE_PROXY   ,0,"p","proxy"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
-{ DATE_DEBUG   ,0,"d","debug"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
-{ DATE_OSC_IP  ,0,"","osc_ip     ",Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
+{ DATE_DEBUG   ,0,"d","debug"     ,Arg::None    ,"  -p[<arg>], \t--debug[=<arg>]"  },
+{ DATE_OSC_IP  ,0,"","osc_ip"     ,Arg::Required ,"  -d[<arg>], \t--osc_ip[=<arg>]"  },
 { DATE_UNKNOWN, 0,"", "",         Arg::None,
  "\nExamples:\n"
  "  example_arg --unknown -o -n10 \n"
@@ -70,7 +70,7 @@ public:
     bool           proxy = false;
     bool           debug = false;
     std::string data_root = "";
-    std::string   osc_ip = "127.0.0.1";
+    std::string   osc_ip = "192.168.0.143";
 
     Args(){};
 
@@ -101,7 +101,7 @@ public:
                     proxy = true;
                     break;
                 case DATE_OSC_IP:
-                    data_root = std::string(opt.arg);
+                    osc_ip = std::string(opt.arg);
                     break;
                 case DATE_UNKNOWN:
                     // not possible because Arg::Unknown returns ARG_ILLEGAL
