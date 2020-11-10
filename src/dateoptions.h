@@ -52,12 +52,12 @@ enum  optionIndex { DATE_UNKNOWN, DATE_HELP, DATE_DATA_DIR, DATE_DEBUG, DATE_PRO
 const option::Descriptor usage[] = {
 { DATE_UNKNOWN, 0,"", "",         Arg::Unknown, "USAGE: example_arg [options]\n\n"
                                           "Options:" },
-{ DATE_HELP,    0,"", "help",     Arg::None,    "  \t--help  \tPrint usage and exit." },
-{ DATE_DATA_DIR,0,"o","data_root" ,Arg::Required,"  -d[<arg>], \t--data_root[=<arg>]"  },
-{ DATE_PROXY   ,0,"p","proxy"     ,Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
-{ DATE_DEBUG   ,0,"d","debug"     ,Arg::None    ,"  -p[<arg>], \t--debug[=<arg>]"  },
-{ DATE_OSC_IP  ,0,"","osc_ip"     ,Arg::Required ,"  -d[<arg>], \t--osc_ip[=<arg>]"  },
-{ DATE_UNKNOWN, 0,"", "",         Arg::None,
+{ DATE_HELP,    0,"" , "help"      , Arg::None,    "  \t--help  \tPrint usage and exit." },
+{ DATE_DATA_DIR,0,"o","data_root"  , Arg::Required,"  -o[<arg>], \t--data_root[=<arg>]"  },
+{ DATE_PROXY   ,0,"p","proxy"      , Arg::None    ,"  -p[<arg>], \t--proxy[=<arg>]"  },
+{ DATE_DEBUG   ,0,"d","debug"      , Arg::None    ,"  -d[<arg>], \t--debug[=<arg>]"  },
+{ DATE_OSC_IP  ,0,"" ,"osc_ip"     , Arg::Required,"             \t--osc_ip[=<arg>]"  },
+{ DATE_UNKNOWN, 0,"" , ""          , Arg::None,
  "\nExamples:\n"
  "  example_arg --unknown -o -n10 \n"
 },
