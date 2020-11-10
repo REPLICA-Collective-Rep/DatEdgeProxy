@@ -106,7 +106,7 @@ void Dataserver::threadedFunction(){
                 sub_core->recv(msg);             
                 OutputData data;
                 memcpy(msg.data(), &data, sizeof(OutputData));
-
+                ofLogNotice("Dataserver::threadedFunction") << "Inference: " << data.device;
                 // Send OSC
                 ofxOscMessage m;
                 m.setAddress("/ml/" + ofToString(data.device));
