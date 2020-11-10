@@ -117,7 +117,7 @@ void Dataserver::threadedFunction(){
                          msg_data.addFloatArg(data.embedding[i]);
                     }
 
-                    msg_loss.setAddress("/ml/data/" + ofToString(data.device));
+                    msg_loss.setAddress("/ml/loss/" + ofToString(data.device));
                     msg_loss.addFloatArg(data.loss);
 
                     sender.sendMessage( msg_data, true);
