@@ -103,17 +103,25 @@ void Dataserver::threadedFunction(){
             }
 
             if(socket == *sub_core){
-                sub_core->recv(msg);             
-                OutputData data;
-                memcpy(msg.data(), &data, sizeof(OutputData));
-                ofLogNotice("Dataserver::threadedFunction") << "Inference: " << data.device;
-                // Send OSC
-                ofxOscMessage m;
-                m.setAddress("/ml/" + ofToString(data.device));
-                for( int i = 0; i < Z_DIM; i++){
-                    m.addFloatArg(data.embedding[i]);
-                }
-                sender.sendMessage(m, true);
+                sub_core->recv(msg);       
+
+                ofLogWarning("Dataserver::threadedFunction") << msg.size() <<  "/" << sizeof(OutputData);
+                if( msg.size() == sizeof(OutputData)){
+                    OutputData data;
+                    memcpy(&data, msg.data(), sizeof(OutputData));
+                    // Send OSC
+                    ofxOscMessage m;
+                    m.setAddress("/ml/" + ofToString(data.device));
+                    for( int i = 0; i < Z_DIM; i++){
+                        m.addFloatArg(data.embedding[i]);
+                    }
+                    ofLogNotice("Sending: ") << "Inference: " << m;
+                    sender.sendMessage(m, true);
+                } else {
+                    ofLogWarning("Dataserver::threadedFunction") << "Output data wrong size " << msg.size() <<  "/" << sizeof(OutputData);
+                };
+
+
             }
         }
     }
