@@ -110,13 +110,18 @@ void Dataserver::threadedFunction(){
                     OutputData data;
                     memcpy(&data, msg.data(), sizeof(OutputData));
                     // Send OSC
-                    ofxOscMessage m;
-                    m.setAddress("/ml/" + ofToString(data.device));
+                    ofxOscMessage msg_data, msg_loss;
+
+                    msg_data.setAddress("/ml/data/" + ofToString(data.device));
                     for( int i = 0; i < Z_DIM; i++){
-                        m.addFloatArg(data.embedding[i]);
+                         msg_data.addFloatArg(data.embedding[i]);
                     }
-                    ofLogNotice("Sending: ") << "Inference: " << m;
-                    sender.sendMessage(m, true);
+
+                    msg_loss.setAddress("/ml/data/" + ofToString(data.device));
+                    msg_loss.addFloatArg(data.loss);
+
+                    sender.sendMessage( msg_data, true);
+                    sender.sendMessage( msg_loss, true);
                 } else {
                     ofLogWarning("Dataserver::threadedFunction") << "Output data wrong size " << msg.size() <<  "/" << sizeof(OutputData);
                 };

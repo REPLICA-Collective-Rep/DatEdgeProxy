@@ -14,7 +14,7 @@ struct DataserverSettings {
     std::string  pub_ip   = "0.0.0.0";
     unsigned int pub_port = 5554;
 
-    std::string  sub_ip   = "0.0.0.0";
+    std::string  sub_ip   = "192.168.0.207";
     unsigned int sub_port = 5553;
 
     std::string osc_ip = "192.168.0.143";
