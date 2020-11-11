@@ -10,7 +10,6 @@ void ofApp::setup(){
 
     SimulateSettings   simulateSettings(proxy_addr);
     WriterSettings     writerSettings  (proxy_addr, args.data_root);
-    VisualiserSettings visualiserSettings(proxy_addr);
 
     DataserverSettings dataserverSettings(proxy_addr, args.osc_ip );
     ProxySettings      proxySettings("0.0.0.0");
@@ -20,15 +19,16 @@ void ofApp::setup(){
         ofSetLogLevel(OF_LOG_VERBOSE);
         simulateSettings.xsub_ip   = "127.0.0.1";
         writerSettings.xpub_ip     = "127.0.0.1";
-        visualiserSettings.xpub_ip = "127.0.0.1";
+        //visualiserSettings.xpub_ip = "127.0.0.1";
     }
 
 
     writer.setup(ctx, writerSettings);
     writer.startThread();
 
-    visualiser.setup(ctx, visualiserSettings);
-    visualiser.startThread();
+    visualiser = new Visualiser(ctx, "vis");
+    visualiser->setup();
+    visualiser->start();
 
     if(args.proxy){
         dataserverSettings.xpub_ip = "127.0.0.1";
@@ -42,7 +42,7 @@ void ofApp::setup(){
 
 
     simulate.setup(ctx, simulateSettings);
- //   simulate.startThread();
+   simulate.startThread();
 
 }
 
@@ -53,7 +53,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    visualiser.draw(graphFbo);
+    visualiser->draw(graphFbo);
 
     std::ostringstream log;
     log << "Framerate: "    << ofGetFrameRate() << "\n";
@@ -61,7 +61,7 @@ void ofApp::draw(){
     log << "simulate   (s): "  << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
     log << "writer     (w): "  << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
     if(args.proxy) log << "proxy      (p): "  << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
-    log << "visualiser (v): "  << (visualiser.isThreadRunning() ? "ON" : "OFF");
+    log << "visualiser (v): "  << (visualiser->isThreadRunning() ? "ON" : "OFF");
 
     ofDrawBitmapStringHighlight( log.str(), 50 , 50);
 }
@@ -93,15 +93,15 @@ void ofApp::keyPressed(int key){
         }
       break;
     case 'v':
-        if(!visualiser.isThreadRunning()){
-            visualiser.startThread();
+        if(!visualiser->isThreadRunning()){
+            visualiser->start();
         } else {
-            visualiser.stopThread();
+            visualiser->stop();
         }
       break;
     case OF_KEY_UP:
     case OF_KEY_RIGHT:
-        visualiser.incrementSelected();
+        visualiser->incrementSelected();
       break;
     default:
         break;

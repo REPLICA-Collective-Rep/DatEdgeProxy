@@ -1,6 +1,6 @@
-obj/linux64/Debug/src/visualiser.o: \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.cpp \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h \
+obj/linux64/Release/src/channel.o: \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.cpp \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/ofMain.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/utils/ofConstants.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/tess2/include/tesselator.h \
@@ -551,14 +551,11 @@ obj/linux64/Debug/src/visualiser.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/of3dUtils.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofCamera.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofEasyCam.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq.hpp \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxZmq/libs/zmq/include/zmq.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq_addon.hpp \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h \
- /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq_addon.hpp
 
-/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h:
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/ofMain.h:
 
@@ -1692,14 +1689,8 @@ obj/linux64/Debug/src/visualiser.o: \
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/libs/openFrameworks/3d/ofEasyCam.h:
 
-/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.h:
-
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq.hpp:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxZmq/libs/zmq/include/zmq.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/zmq_addon.hpp:
-
-/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/constants.h:
-
-/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h:

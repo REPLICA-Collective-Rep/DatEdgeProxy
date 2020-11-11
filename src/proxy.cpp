@@ -55,7 +55,7 @@ void Proxy::threadedFunction(){
             continue;
         } 
 
-        ofLogVerbose("Proxy::threadedFunction") << "Got " << nin << " events";
+        //ofLogVerbose("Proxy::threadedFunction") << "Got " << nin << " events";
         
         for (int ind=0; ind<nin; ++ind) {
             zmq::message_t msg;

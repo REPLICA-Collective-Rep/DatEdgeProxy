@@ -6,8 +6,21 @@ Channel::Channel(zmq::context_t & ctx, const std::string & name):
 
 };
 
-void Channel::setup(){
 
+void Channel::setup(){
+    onSetup();
+    events = std::vector<zmq::poller_event<>>(1);
+    isSetup = true;
+};
+
+void Channel::start(){
+    onStart();
+    startThread();
+};
+
+void Channel::stop(){
+    onStop();
+    waitForThread(true);
 };
 
 void Channel::threadedFunction(){
@@ -19,13 +32,14 @@ void Channel::threadedFunction(){
     while( isThreadRunning() ){
         
         const std::chrono::milliseconds t(timeout);
-        const auto nin = poller.wait_all(events, t);
+        auto nin = poller.wait_all(events, t);
 
         if (!nin) {
             ofLogWarning("Channel::threadedFunction") << name << " input timeout, try again";
             continue;
         }
-        ofLogVerbose("Channel::threadedFunction") << name << " got " << nin << " events";        
+
+       
         for (unsigned int ind=0; ind<nin; ++ind) {
             auto socket = events[ind].socket;
 
@@ -35,27 +49,41 @@ void Channel::threadedFunction(){
                     continue;
                 }
             }
-            ofLogWarning("Channel::threadedFunction") << name << " input timeout, try again";
         }
     }
+    ofLogError("Channel::threadedFunction") << name << " exiting channel!!";
+
 };
 
 shared_ptr<zmq::socket_t> Channel::getPublisher(std::string ip, int port){
-    std::ostringstream addr; addr << "tcp://" << ip << ":" << ofToString(port);
-    auto socket = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);
-    socket->bind(addr.str());
+    socket_ptr socket;
+    try{
+        std::ostringstream addr; addr << "tcp://" << ip << ":" << ofToString(port);
+        socket = make_shared<zmq::socket_t>(ctx, zmq::socket_type::pub);
+        socket->bind(addr.str());
+    }
+    catch( const zmq::error_t& e ) {
+        ofLogWarning("Channel::getPublisher") << name << "\n" <<  e.what();
+    }
     return socket;
-
 };
 
 shared_ptr<zmq::socket_t> Channel::getSubscriber(std::string ip, int port, const std::string & filter){
-    std::ostringstream addr; addr << "tcp://" << ip << ":" << ofToString(port);
-    auto socket = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
-    socket->connect(addr.str());
-    socket->set(zmq::sockopt::subscribe, filter);
+    socket_ptr socket;
+    try{
+        std::ostringstream addr; addr << "tcp://" << ip << ":" << ofToString(port);
+        socket = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
+        socket->connect(addr.str());
+        socket->set(zmq::sockopt::subscribe, filter);
+    }
+    catch( const zmq::error_t& e ) {
+        ofLogWarning("Channel::getPublisher") << name << "\n" <<  e.what();
+    }
     return socket;
 };
 
 void Channel::addCallback(socket_ptr socket_ptr, callback_func callback){
+    poller.add(*socket_ptr, zmq::event_flags::pollin );
+    events.push_back(zmq::poller_event<>());
     poll_list[socket_ptr] = callback;
 };

@@ -2,6 +2,7 @@
 #include "parser.h"
 #include <regex>
 
+using namespace std::placeholders;
 
 std::array<ofColor, DATE_NUM_CHANNELS> colors {
 		ofColor::fromHex(ofHexToInt("47b1b9")),
@@ -32,39 +33,27 @@ std::array<ofColor, DATE_NUM_CHANNELS> colors {
 
 
 
-Visualiser::Visualiser(){
-    selected_reading = all_readings.begin();
+Visualiser::Visualiser(zmq::context_t & ctx, const std::string & name) :
+    Channel(ctx, name)
+{
 }
 
 
-void Visualiser::setup(zmq::context_t & ctx, VisualiserSettings settings){
-    if(isThreadRunning()){
-        ofLogWarning("Visualiser::setup") << "Thread running!";
-        return;
-    }
-    this->settings = settings;
-    isSetup = false;  
-    try{
-        std::ostringstream pub_addr; pub_addr << "tcp://" << settings.xpub_ip << ":" << ofToString(settings.xpub_port);
-        sub = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
-        sub->connect(pub_addr.str());
-        sub->set(zmq::sockopt::subscribe, "");
+void Visualiser::onSetup(){
+    raw_sub = getSubscriber(settings.raw_pub_ip, settings.raw_pub_port, "");   
+    addCallback(raw_sub, std::bind(&Visualiser::receiveSensorData, this) );
 
-            std::ostringstream sub_addr; sub_addr << "tcp://" << settings.sub_ip << ":" << ofToString(settings.sub_port);
-        sub_core = make_shared<zmq::socket_t>(ctx, zmq::socket_type::sub);
-        sub_core->connect(sub_addr.str());
-        sub_core->set(zmq::sockopt::subscribe, "");
+    ml_sub = getSubscriber(settings.ml_pub_ip, settings.ml_pub_port, "" );
+    addCallback(ml_sub, std::bind(&Visualiser::receiveMLData, this));
 
+}
 
-        poller.add(*sub_core, zmq::event_flags::pollin);
-        poller.add(*sub, zmq::event_flags::pollin);
-        events = std::vector<zmq::poller_event<>>(2);
+void Visualiser::onStart(){
+    for( int i ; i < display_lines.size(); i++ )
+        display_lines[i].clear();
 
-        isSetup = true;   
-    }
-    catch( const zmq::error_t& e ) {
-        ofLogWarning("Simulate::setup") << e.what();
-    }
+    all_readings.clear();
+    selected_reading = all_readings.begin();
 }
 
 void Visualiser::draw(ofFbo & fbo ){
@@ -112,96 +101,69 @@ void Visualiser::draw(ofFbo & fbo ){
 
 }
 
-void Visualiser::threadedFunction(){
+void Visualiser::receiveSensorData(){
+    zmq::message_t msg;
+    raw_sub->recv(msg);             
 
-    if( !isSetup ){
-        ofLogError("Visualiser::threadedFunction") << "Not setup!!";
-        return;
-    }
+    auto size = sizeof(SensorData);
 
-    for( int i ; i < display_lines.size(); i++ )
-        display_lines[i].clear();
+    if(msg.size() == size){
 
-    all_readings.clear();
-    selected_reading = all_readings.begin();
+        SensorData  data;
+        memcpy(&data, msg.data(), msg.size());
 
-    while( isThreadRunning() ){
-        
-        const std::chrono::milliseconds _timeout(this->settings.timeout);
-        const auto nin = poller.wait_all(events, _timeout);
+        lock();       
+        auto & readings = all_readings[data.device];
+        for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
+            auto & reading = readings[i];
 
-        if (!nin) {
-            ofLogVerbose("Visualiser::threadedFunction") << "Input timeout, try again";
-            continue;
-        } 
+            glm::vec3 point(data.mscounter, data.raw[i], 0);
 
-        ofLogVerbose("Visualiser::threadedFunction") << "Got " << nin << " events";
-        
-        for (unsigned int ind=0; ind<nin; ++ind) {
-
-            zmq::message_t msg;
-            auto socket = events[ind].socket;
-
-            if(socket == *sub_core){
-                sub_core->recv(msg);             
-
-
-                if(msg.size() == sizeof(OutputData) || true){
-                    OutputData data;
-                    memcpy(&data, msg.data(), msg.size());
-                    memcpy(msg.data(), &data, sizeof(OutputData));
-
-                    
-                }
+            if(reading.size() != 0 && 
+                (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
+            {
+                ofLogVerbose("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
+                reading.clear();
+                //reading.back().x += DATE_TARGET_INTERVAL_MS;
             }
 
-            if(socket == *sub){
-
-                sub->recv(&msg);            
-
-                auto size = sizeof(SensorData);
-
-                if(msg.size() == sizeof(SensorData) || true){
-
-                    SensorData  data;
-                    memcpy(&data, msg.data(), msg.size());
-
-                    lock();       
-                    auto & readings = all_readings[data.device];
-                    for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
-                        auto & reading = readings[i];
-
-                        glm::vec3 point(data.mscounter, data.raw[i], 0);
-
-                        if(reading.size() != 0 && 
-                            (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
-                        {
-                            ofLogVerbose("Visualiser::threadedFunction") << "MS counter out of sequence, clearing cache";
-                            reading.clear();
-                            //reading.back().x += DATE_TARGET_INTERVAL_MS;
-                        }
-
-                        reading.push_back(point);
-                        if( reading.size() > settings.buffer_size ){
-                            reading.erase(readings[i].begin());
-                        }
-                    }
-                    if( all_readings.size() == 1) selected_reading = all_readings.begin();
-                    if( selected_reading->first == data.device ){
-                        for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
-                            display_lines[i].clear(); 
-
-                            glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
-
-                            int size = readings[i].size();
-
-                            display_lines[i].addVertices( verts, size);
-
-                        }
-                    }
-                    unlock();
-                };
+            reading.push_back(point);
+            if( reading.size() > settings.buffer_size ){
+                reading.erase(readings[i].begin());
             }
         }
-    }
+        if( all_readings.size() == 1) selected_reading = all_readings.begin();
+        if( selected_reading->first == data.device ){
+            for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){  
+                display_lines[i].clear(); 
+
+                glm::vec3 * verts = (glm::vec3*)(&(readings[i])[0]);
+
+                int size = readings[i].size();
+
+                display_lines[i].addVertices( verts, size);
+
+            }
+        }
+        unlock();
+    } else {
+        ofLogWarning("Visualiser::receiveMLData") << "Data wrong size";
+    };
+
 }
+
+
+void Visualiser::receiveMLData(){
+    zmq::message_t msg;
+    ml_sub->recv(msg);            
+
+    if(msg.size() == sizeof(OutputData)){
+        OutputData data;
+        memcpy(&data, msg.data(), msg.size());
+        memcpy(msg.data(), &data, sizeof(OutputData));
+    } else {
+        ofLogVerbose("Visualiser::receiveSensorData" ) << "Data wrong size";
+    }
+
+}
+

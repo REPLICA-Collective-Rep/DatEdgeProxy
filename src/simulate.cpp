@@ -7,13 +7,6 @@ Simulate::Simulate(){
 
 
 void Simulate::setup(zmq::context_t & ctx, SimulateSettings settings){
-    if(isThreadRunning()){
-        ofLogWarning("Simulate::setup") << "Thread running!";
-        return;
-    }
-
-    this->settings = settings;
-    isSetup = false;  
     try{
         std::ostringstream xsub_addr; xsub_addr << "tcp://" << settings.xsub_ip << ":" << ofToString(settings.xsub_port);
         ofLogNotice("Simulate::setup:xsub_addr") << xsub_addr.str();
@@ -36,12 +29,12 @@ void Simulate::threadedFunction(){
 
     int counter = 0;
     while( isThreadRunning() ){
-
+        lock();
         for (size_t i = 0; i < settings.sensors.size(); i++ ) {
             std::ostringstream _msg;
             _msg << "sensors" << " ";      
             _msg << "p" << settings.sensors[i] << " ";
-            switch(1){
+            switch(mode){
                 case 0:
                     _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
                     _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
@@ -81,8 +74,9 @@ void Simulate::threadedFunction(){
 
             zmq::message_t msg(str_msg.c_str(), str_msg.size());
             auto res = pub->send(msg, zmq::send_flags::none);
-            
         }
+        unlock();
+
         sleep(settings.interval);
 
         counter += settings.interval;

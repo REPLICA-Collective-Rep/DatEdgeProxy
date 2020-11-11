@@ -1,57 +1,54 @@
 #pragma once
 #include "ofMain.h"
-
-#include "zmq.hpp"
-#include "zmq_addon.hpp"
-
+#include "channel.h"
 #include "constants.h"
 
 
 struct VisualiserSettings {
-    std::string  xpub_ip = "127.0.0.1";
-    unsigned int xpub_port = 5554;
+    std::string  raw_pub_ip   = "127.0.0.1";
+    unsigned int raw_pub_port = 5554;
 
-	std::string  sub_ip   = "0.0.0.0";
-    unsigned int sub_port = 5553;
+	std::string  ml_pub_ip   = "0.0.0.0";
+    unsigned int ml_pub_port = 5553;
 
-    int timeout = 200;
 	unsigned int buffer_size = 512;
-
-	VisualiserSettings(){}
-	VisualiserSettings(std::string xpub_ip):
-        xpub_ip(xpub_ip)
-    {}
 };
 
 
-class Visualiser : public ofThread {
+class Visualiser : public Channel {
 
 public:
 
-    Visualiser();
+    Visualiser(zmq::context_t & ctx, const std::string & name);
 
-    void setup(zmq::context_t & ctx, VisualiserSettings settings);
+    virtual void onSetup() override;
+    virtual void onStart() override;
 
 	void draw(ofFbo & fbo );
 
-    void threadedFunction();
-
 	void incrementSelected(){
+		lock();
 		selected_reading++;
 		if(selected_reading == all_readings.end()) selected_reading = all_readings.begin();
+		unlock();
 	}
 
+protected:
+
+    void threadedFunction() {
+		Channel::threadedFunction();
+	};
+
+	void receiveSensorData();
+	void receiveMLData();
+
 private:
+	VisualiserSettings settings;
+	socket_ptr raw_sub;
+	socket_ptr ml_sub;
 
-    bool isSetup = false;    
-    VisualiserSettings settings;
-    shared_ptr<zmq::socket_t> sub;
-    shared_ptr<zmq::socket_t> sub_core;
 
-    std::vector<zmq::poller_event<>> events;
-    zmq::poller_t<> poller;
-
-	std::array<ofPolyline, DATE_NUM_CHANNELS> display_lines;
+  	std::array<ofPolyline, DATE_NUM_CHANNELS> display_lines;
 
 	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>> all_readings;
 	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>>::const_iterator selected_reading;

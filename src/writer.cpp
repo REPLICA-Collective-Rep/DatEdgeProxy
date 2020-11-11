@@ -72,7 +72,7 @@ void Writer::threadedFunction(){
             continue;
         } 
 
-        ofLogVerbose("Writer::threadedFunction") << "Got " << nin << " events";
+        //ofLogVerbose("Writer::threadedFunction") << "Got " << nin << " events";
         
         for (unsigned int ind=0; ind<nin; ++ind) {
             zmq::message_t m;

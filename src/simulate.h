@@ -35,4 +35,6 @@ private:
 
     shared_ptr<zmq::socket_t> pub;
 
+    int mode = 0;
+
 };

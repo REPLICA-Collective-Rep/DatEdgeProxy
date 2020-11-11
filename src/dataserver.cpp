@@ -69,7 +69,7 @@ void Dataserver::threadedFunction(){
             continue;
         } 
 
-        ofLogVerbose("Dataserver::threadedFunction") << "Got " << nin << " events";
+        //ofLogVerbose("Dataserver::threadedFunction") << "Got " << nin << " events";
         
         for (unsigned int ind=0; ind<nin; ++ind) {
 

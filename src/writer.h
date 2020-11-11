@@ -48,8 +48,8 @@ private:
         void save(){
             std::string npypath = path + ofToString(i++, 3, '0') + ".npy";
 
-            int rows = data.size() / (DATE_NUM_CHANNELS + 1);
-            int cols = DATE_NUM_CHANNELS + 1;
+            unsigned int rows = data.size() / (DATE_NUM_CHANNELS + 1);
+            unsigned int cols = DATE_NUM_CHANNELS + 1;
 
             if( rows * cols != data.size()){
                 ofLogWarning("bufferInfo::save") << "Data corrupt";

@@ -45,7 +45,7 @@ class ofApp : public ofBaseApp{
 
 
 		Writer writer;
-		Visualiser visualiser;
+		Visualiser * visualiser;
 
 		ofFbo graphFbo;
 	
