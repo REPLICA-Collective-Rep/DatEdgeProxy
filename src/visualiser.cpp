@@ -161,6 +161,7 @@ void Visualiser::receiveMLData(){
         OutputData data;
         memcpy(&data, msg.data(), msg.size());
         memcpy(msg.data(), &data, sizeof(OutputData));
+        ofLogNotice("Visualiser::receiveSensorData") << data.device << " (" << data.loss << ")";
     } else {
         ofLogVerbose("Visualiser::receiveSensorData" ) << "Data wrong size";
     }
