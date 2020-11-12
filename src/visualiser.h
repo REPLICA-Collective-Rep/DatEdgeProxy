@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "channel.h"
 #include "constants.h"
-
+#include "parser.h"
 
 struct VisualiserSettings {
     std::string  raw_pub_ip   = "127.0.0.1";
@@ -28,8 +28,8 @@ public:
 
 	void incrementSelected(){
 		lock();
-		selected_reading++;
-		if(selected_reading == all_readings.end()) selected_reading = all_readings.begin();
+		// selected_reading++;
+		// if(selected_reading == all_readings.end()) selected_reading = all_readings.begin();
 		unlock();
 	}
 
@@ -47,11 +47,16 @@ private:
 	socket_ptr raw_sub;
 	socket_ptr ml_sub;
 
+	int selected;
+	std::map<int, bool> newRawData;
+	std::map<int, bool> newMLData;
 
-  	std::array<ofPolyline, DATE_NUM_CHANNELS> display_lines;
+  	std::map<int, std::array<ofVbo, DATE_NUM_CHANNELS>>    rawVbos;
+  	std::map<int, ofTexture> outputTextures;
 
-	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>> all_readings;
-	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>>::const_iterator selected_reading;
+	std::map<int, std::array<std::vector<glm::vec3>, DATE_NUM_CHANNELS>> raw_data;
+	std::map<int, std::vector<float>> output_data;
+	std::map<int, std::vector<float>> losses;
 };
 
 

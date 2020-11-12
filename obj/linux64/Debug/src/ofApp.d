@@ -563,6 +563,7 @@ obj/linux64/Debug/src/ofApp.o: \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/cnpy.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.h \
+ /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dataserver.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOsc.h \
  /media/data/Programming/openFrameworks/of_v0.11.0_release/addons/ofxOsc/src/ofxOscArg.h \
@@ -1738,6 +1739,8 @@ obj/linux64/Debug/src/ofApp.o: \
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/visualiser.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/channel.h:
+
+/media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/parser.h:
 
 /media/data/Programming/openFrameworks/of_v0.11.0_release/apps/myApps/DatEdgeProxy/src/dataserver.h:
 

@@ -8,12 +8,20 @@
 #include "cnpy.h"
 
 struct WriterSettings {
-    std::string  data_root = "./data";
+    std::string  data_root;
 
-    std::string  raw_pub_ip   = "127.0.0.1";
-    unsigned int raw_pub_port = 5554;
 
+    std::string  xpub_ip;
+    unsigned int xpub_port = 5554;
+
+    int timeout    = 1000;
     unsigned int buffer_size = 10000;
+
+	WriterSettings(){}
+	WriterSettings(std::string xpub_ip, const std::string & data_root):
+        data_root(data_root),
+        xpub_ip(xpub_ip)
+    {}
 };
 
 
