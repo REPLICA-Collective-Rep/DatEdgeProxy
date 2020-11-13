@@ -3,7 +3,7 @@
 
 using namespace std::placeholders;
 
-std::array<ofColor, DATE_NUM_CHANNELS> colors {
+std::vector<ofColor> colors {
 		ofColor::fromHex(ofHexToInt("47b1b9")),
 		ofColor::fromHex(ofHexToInt("499dbb")),
 		ofColor::fromHex(ofHexToInt("4a8abd")),
@@ -11,23 +11,23 @@ std::array<ofColor, DATE_NUM_CHANNELS> colors {
 		ofColor::fromHex(ofHexToInt("4e62c0")),
 		ofColor::fromHex(ofHexToInt("504fc1")),
 		ofColor::fromHex(ofHexToInt("6751c3")),
-		ofColor::fromHex(ofHexToInt("7e52c5"))
-		// ofColor::fromHex(ofHexToInt("453283")),
-		// ofColor::fromHex(ofHexToInt("563286")),
-		// ofColor::fromHex(ofHexToInt("673289")),
-		// ofColor::fromHex(ofHexToInt("7a328c")),
-		// ofColor::fromHex(ofHexToInt("8e338f")),
-		// ofColor::fromHex(ofHexToInt("913381")),
-		// ofColor::fromHex(ofHexToInt("943371")),
-		// ofColor::fromHex(ofHexToInt("973360"))
-		// ofColor::fromHex(ofHexToInt("34192d")),
-		// ofColor::fromHex(ofHexToInt("401d38")),
-		// ofColor::fromHex(ofHexToInt("4d2042")),
-		// ofColor::fromHex(ofHexToInt("246065")),
-		// ofColor::fromHex(ofHexToInt("254f68")),
-		// ofColor::fromHex(ofHexToInt("253e6a")),
-		// ofColor::fromHex(ofHexToInt("262b6d")),
-		// ofColor::fromHex(ofHexToInt("352670"))
+		ofColor::fromHex(ofHexToInt("7e52c5")),
+		ofColor::fromHex(ofHexToInt("453283")),
+		ofColor::fromHex(ofHexToInt("563286")),
+		ofColor::fromHex(ofHexToInt("673289")),
+		ofColor::fromHex(ofHexToInt("7a328c")),
+		ofColor::fromHex(ofHexToInt("8e338f")),
+		ofColor::fromHex(ofHexToInt("913381")),
+		ofColor::fromHex(ofHexToInt("943371")),
+		ofColor::fromHex(ofHexToInt("973360")),
+		ofColor::fromHex(ofHexToInt("34192d")),
+		ofColor::fromHex(ofHexToInt("401d38")),
+		ofColor::fromHex(ofHexToInt("4d2042")),
+		ofColor::fromHex(ofHexToInt("246065")),
+		ofColor::fromHex(ofHexToInt("254f68")),
+		ofColor::fromHex(ofHexToInt("253e6a")),
+		ofColor::fromHex(ofHexToInt("262b6d")),
+		ofColor::fromHex(ofHexToInt("352670"))
 };
 
 
@@ -57,6 +57,7 @@ void Visualiser::onStart(){
 
 void Visualiser::draw(ofFbo & fbo ){
 
+    ofEnableAlphaBlending();
     for( const auto & output : output_data ){
         if( newMLData[output.first] ){
             lock();  
@@ -64,21 +65,50 @@ void Visualiser::draw(ofFbo & fbo ){
             newMLData[output.first] = false;
             unlock();
         }
-        outputTextures[output.first].draw(0, 0, ofGetWidth(), ofGetHeight());
+        //outputTextures[output.first].draw(0, 0, ofGetWidth(), ofGetHeight());
     }
 
     for( const auto & data : raw_data ){
+
         if( newRawData[data.first] ){
             lock();  
-            for(int i = 0; i < DATE_NUM_CHANNELS; i++)
-                rawVbos[data.first][i].setVertexData((glm::vec3 *)&(data.second[0]), data.second.size(), GL_DYNAMIC_DRAW);
+            for(int i = 0; i < DATE_NUM_CHANNELS; i++){
+                rawVbos[data.first][i].clear();
+                rawVbos[data.first][i].setVertexData((glm::vec3 *)&(data.second[i][0]), data.second[i].size(), GL_DYNAMIC_DRAW);
+            }
+
             
             newRawData[data.first] = false;
             unlock();
         }
 
-        for(int i = 0; i < DATE_NUM_CHANNELS; i++)
-            rawVbos[data.first][i].draw(GL_LINE_STRIP, 0, data.second.size());
+
+        float end = data.second[0].back().x;
+        float srt = data.second[0].front().x;
+        float interval = (end - srt) / data.second[0].size();    
+        
+        float width  = ofGetWidth();
+        float height = ofGetHeight();
+
+        float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
+        float hOff    = 2.0;
+
+        float wScale   = width / (interval * settings.buffer_size);
+
+        ofEnableAlphaBlending();
+        ofPushMatrix();
+            ofScale( wScale , hScale, 1.0);
+        
+            ofTranslate( glm::vec3(-srt , hOff * 0.5 , 0.0));
+
+            for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){                
+                ofSetColor(colors[(i * data.first) % colors.size()], 127);
+                rawVbos[data.first][i].draw(GL_LINE_STRIP, 0, data.second[i].size());
+
+                ofTranslate( glm::vec3(0, hOff, 0.0));
+            }
+        ofPopMatrix();
+        ofDisableAlphaBlending();
 
     }
 
@@ -91,7 +121,6 @@ void Visualiser::draw(ofFbo & fbo ){
     //         float height = ofGetHeight();
 
     //         float hScale  = (height / 2.0) / DATE_NUM_CHANNELS;
-    //         float hOff    = 2.0;
 
 
     //         float wScale   = width / ((float)settings.buffer_size * interval) ;
@@ -141,7 +170,7 @@ void Visualiser::receiveSensorData(){
         for( int i = 0; i < DATE_NUM_CHANNELS; i++ ){   
             auto & reading = readings[i];
 
-            glm::vec3 point(data.mscounter, data.raw[i], i);
+            glm::vec3 point(data.mscounter, data.raw[i], 0);
 
             if(reading.size() != 0 && 
                 (reading.back().x >= point.x || point.x >= reading.back().x + 100 * DATE_TARGET_INTERVAL_MS ))
@@ -150,6 +179,8 @@ void Visualiser::receiveSensorData(){
             }
 
             reading.push_back(point);
+
+
             if( reading.size() > settings.buffer_size ){
                 reading.erase(readings[i].begin());
             }
@@ -172,6 +203,7 @@ void Visualiser::receiveMLData(){
         OutputData data;
         memcpy(&data, msg.data(), msg.size());
 
+        lock();
         std::vector<float> & output = output_data[data.device];
         output.reserve(output.size() + Z_DIM);
         copy(&data.embedding[0], &data.embedding[Z_DIM], back_inserter(output));
@@ -187,6 +219,7 @@ void Visualiser::receiveMLData(){
         }
 
         newMLData[data.device] = true;
+        unlock();
 
     } else {
         ofLogVerbose("Visualiser::receiveSensorData" ) << "Data wrong size";

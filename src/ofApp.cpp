@@ -42,8 +42,9 @@ void ofApp::setup(){
 
 
     simulate.setup(ctx, simulateSettings);
-   simulate.startThread();
+    simulate.startThread();
 
+    ofBackground(ofColor::black);
 }
 
 //--------------------------------------------------------------
@@ -55,15 +56,15 @@ void ofApp::update(){
 void ofApp::draw(){
     visualiser->draw(graphFbo);
 
-    std::ostringstream log;
-    log << "Framerate: "    << ofGetFrameRate() << "\n";
-    log << "\n";
-    log << "simulate   (s): "  << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
-    log << "writer     (w): "  << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
-    if(args.proxy) log << "proxy      (p): "  << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
-    log << "visualiser (v): "  << (visualiser->isThreadRunning() ? "ON" : "OFF");
+    // std::ostringstream log;
+    // log << "Framerate: "    << ofGetFrameRate() << "\n";
+    // log << "\n";
+    // log << "simulate   (s): "  << (simulate.isThreadRunning()   ? "ON" : "OFF") << "\n";
+    // log << "writer     (w): "  << (writer.isThreadRunning()     ? "ON" : "OFF") << "\n";
+    // if(args.proxy) log << "proxy      (p): "  << (proxy.isThreadRunning()      ? "ON" : "OFF") << "\n";
+    // log << "visualiser (v): "  << (visualiser->isThreadRunning() ? "ON" : "OFF");
 
-    ofDrawBitmapStringHighlight( log.str(), 50 , 50);
+    // ofDrawBitmapStringHighlight( log.str(), 50 , 50);
 }
 
 //--------------------------------------------------------------

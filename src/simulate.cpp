@@ -34,7 +34,7 @@ void Simulate::threadedFunction(){
             std::ostringstream _msg;
             _msg << "sensors" << " ";      
             _msg << "p" << settings.sensors[i] << " ";
-            switch(mode){
+            switch(0){
                 case 0:
                     _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
                     _msg << ofToString( ofRandomf(), 4, 5, 0) << " ";
