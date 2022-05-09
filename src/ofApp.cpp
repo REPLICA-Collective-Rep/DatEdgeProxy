@@ -42,7 +42,7 @@ void ofApp::setup(){
 
 
     simulate.setup(ctx, simulateSettings);
-    simulate.startThread();
+    //simulate.startThread();
 
     ofBackground(ofColor::black);
 }

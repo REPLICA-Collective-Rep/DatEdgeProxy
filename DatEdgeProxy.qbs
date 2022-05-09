@@ -12,9 +12,29 @@ Project{
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
+            'src/channel.cpp',
+            'src/channel.h',
+            'src/cnpy.cpp',
+            'src/cnpy.h',
+            'src/constants.h',
+            'src/dataserver.cpp',
+            'src/dataserver.h',
+            'src/dateoptions.h',
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',
+            'src/optionparser.h',
+            'src/parser.h',
+            'src/proxy.cpp',
+            'src/proxy.h',
+            'src/simulate.cpp',
+            'src/simulate.h',
+            'src/visualiser.cpp',
+            'src/visualiser.h',
+            'src/writer.cpp',
+            'src/writer.h',
+            'src/zmq.hpp',
+            'src/zmq_addon.hpp',
         ]
 
         of.addons: [
